@@ -37,7 +37,7 @@ describe StaticRecord::Base do
 
     describe '.where' do
 
-      it 'retuns the records that match given criterias' do
+      it 'returns the records that match given criterias' do
         countries = Country.where(name: 'France')
         expect(countries.length).to be == 1
         expect(countries.first.name).to be == 'France'
@@ -46,6 +46,20 @@ describe StaticRecord::Base do
       it 'is chainable' do
         countries = Country.where(name: 'France').where(id: 1)
         expect(countries).to be_empty
+      end
+
+    end
+
+    describe '.exists?' do
+
+      it 'returns true if query match at least one record' do
+        scope = Country.where(name: 'France')
+        expect(scope).to exist
+      end
+
+      it 'returns true if query match no records' do
+        scope = Country.where(name: 'France', id: 42)
+        expect(scope).to_not exist
       end
 
     end

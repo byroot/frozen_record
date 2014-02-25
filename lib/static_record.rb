@@ -34,6 +34,10 @@ module StaticRecord
       @results ||= query_results
     end
 
+    def exists?
+      !empty?
+    end
+
     def where(criterias)
       spawn.where!(criterias)
     end
