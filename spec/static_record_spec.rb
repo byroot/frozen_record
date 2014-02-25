@@ -35,6 +35,16 @@ describe StaticRecord::Base do
 
     end
 
+    describe '.where' do
+
+      it 'filter records that match' do
+        countries = Country.where(name: 'France')
+        expect(countries.length).to be == 1
+        expect(countries.first.name).to be == 'France'
+      end
+
+    end
+
   end
 
 end

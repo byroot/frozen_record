@@ -20,6 +20,12 @@ module StaticRecord
       find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
     end
 
+    def where(criterias)
+      @records.select do |record|
+        criterias.each_pair.all? { |attr, value| record.public_send(attr) == value }
+      end
+    end
+
   end
 
   class Base
@@ -39,7 +45,7 @@ module StaticRecord
         @scope ||= Scope.new(load_records)
       end
 
-      delegate :find, :find_by_id, to: :all
+      delegate :find, :find_by_id, :where, to: :all
 
       private
 
