@@ -6,7 +6,6 @@ module StaticRecord
   RecordNotFound = Class.new(StandardError)
 
   class Base
-
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::Serializers::JSON
@@ -17,32 +16,36 @@ module StaticRecord
     class_attribute :primary_key
     self.primary_key = :id
 
-    class << self
+    class Scope
+
+      def initialize(records)
+        @records = records
+      end
+
+      def find_by_id(id)
+        @records.find { |r| r.id == id }
+      end
 
       def find(id)
         raise RecordNotFound, "Can't lookup record without ID" unless id
         find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
       end
 
+    end
+
+    class << self
+
       def all
-        records.dup
+        @scope ||= Scope.new(load_records)
       end
 
-      def find_by_id(id)
-        records
-        @ids_index[id]
-      end
+      delegate :find, :find_by_id, to: :all
 
       private
 
-      def records
-        return @records if defined?(@records)
-
-        @records = YAML.load_file(file_path) || []
-        @records = @records.map(&method(:new)).freeze
-        @ids_index = @records.index_by(&:id)
-
-        @records
+      def load_records
+        records = YAML.load_file(file_path) || []
+        records.map(&method(:new)).freeze
       end
 
       def file_path
