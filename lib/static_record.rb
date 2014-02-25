@@ -5,6 +5,23 @@ require 'active_model'
 module StaticRecord
   RecordNotFound = Class.new(StandardError)
 
+  class Scope
+
+    def initialize(records)
+      @records = records
+    end
+
+    def find_by_id(id)
+      @records.find { |r| r.id == id }
+    end
+
+    def find(id)
+      raise RecordNotFound, "Can't lookup record without ID" unless id
+      find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
+    end
+
+  end
+
   class Base
     extend ActiveModel::Naming
     include ActiveModel::Conversion
@@ -15,23 +32,6 @@ module StaticRecord
 
     class_attribute :primary_key
     self.primary_key = :id
-
-    class Scope
-
-      def initialize(records)
-        @records = records
-      end
-
-      def find_by_id(id)
-        @records.find { |r| r.id == id }
-      end
-
-      def find(id)
-        raise RecordNotFound, "Can't lookup record without ID" unless id
-        find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
-      end
-
-    end
 
     class << self
 
