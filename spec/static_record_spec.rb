@@ -37,10 +37,15 @@ describe StaticRecord::Base do
 
     describe '.where' do
 
-      it 'filter records that match' do
+      it 'retuns the records that match given criterias' do
         countries = Country.where(name: 'France')
         expect(countries.length).to be == 1
         expect(countries.first.name).to be == 'France'
+      end
+
+      it 'is chainable' do
+        countries = Country.where(name: 'France').where(id: 1)
+        expect(countries).to be_empty
       end
 
     end
