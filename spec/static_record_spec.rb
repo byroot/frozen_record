@@ -119,4 +119,46 @@ describe StaticRecord::Base do
 
   end
 
+  describe '`attribute`?' do
+
+    let(:blank) { Country.new(id: 0, name: '', nato: false, king: nil) }
+
+    let(:present) { Country.new(id: 42, name: 'Groland', nato: true, king: Object.new) }
+
+    it 'considers `0` as missing' do
+      expect(blank.id?).to be_false
+    end
+
+    it 'considers `""` as missing' do
+      expect(blank.name?).to be_false
+    end
+
+    it 'considers `false` as missing' do
+      expect(blank.nato?).to be_false
+    end
+
+    it 'considers `nil` as missing' do
+      expect(blank.king?).to be_false
+    end
+
+    it 'considers other numbers than `0` as present' do
+      expect(present.id?).to be_true
+    end
+
+    it 'considers other strings than `""` as present' do
+      expect(present.name?).to be_true
+    end
+
+    it 'considers `true` as present' do
+      expect(present.nato?).to be_true
+    end
+
+    it 'considers not `nil` objects as present' do
+      expect(present.king?).to be_true
+    end
+
+    
+
+  end
+
 end
