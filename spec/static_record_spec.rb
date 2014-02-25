@@ -4,6 +4,34 @@ describe StaticRecord::Base do
 
   describe 'querying' do
 
+    describe '.first' do
+
+      it 'returns the first country' do
+        country = Country.first
+        expect(country.id).to be == 1
+      end
+
+      it 'can be called on any scope' do
+        country = Country.where(name: 'France').first
+        expect(country.id).to be == 2
+      end
+
+    end
+
+    describe '.last' do
+
+      it 'returns the first country' do
+        country = Country.last
+        expect(country.id).to be == 2
+      end
+
+      it 'can be called on any scope' do
+        country = Country.where(name: 'Canada').last
+        expect(country.id).to be == 1
+      end
+
+    end
+
     describe '.find' do
 
       it 'allow to find records by id' do
@@ -62,6 +90,31 @@ describe StaticRecord::Base do
         expect(scope).to_not exist
       end
 
+    end
+
+  end
+
+  describe '#==' do
+
+    it 'returns true if both instances are from the same class and have the same id' do
+      country = Country.first
+      second_country = country.dup
+
+      expect(country).to be == second_country
+    end
+
+    it 'returns false if both instances are not from the same class' do
+      country = Country.first
+      car = Car.new(id: country.id)
+
+      expect(country).to_not be == car
+    end
+
+    it 'returns false if both instances do not have the same id' do
+      country = Country.first
+      second_country = Country.last
+
+      expect(country).to_not be == second_country
     end
 
   end

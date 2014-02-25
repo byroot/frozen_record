@@ -98,7 +98,7 @@ module StaticRecord
         @scope ||= Scope.new(load_records)
       end
 
-      delegate :find, :find_by_id, :where, to: :all
+      delegate :find, :find_by_id, :where, :first, :last, to: :all
 
       private
 
@@ -123,6 +123,10 @@ module StaticRecord
 
     def [](attr)
       @attributes[attr.to_sym]
+    end
+
+    def ==(other)
+      super || other.is_a?(self.class) && other.id == id
     end
 
     def persisted?
