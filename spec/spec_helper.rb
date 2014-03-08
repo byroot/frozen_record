@@ -11,6 +11,8 @@ SimpleCov.start
 
 require 'frozen_record'
 
+FrozenRecord::Base.base_path = File.join(File.dirname(__FILE__), 'fixtures')
+
 Dir[File.expand_path(File.join(File.dirname(__FILE__), 'support', '**', '*.rb'))].each { |f| require f }
 
 RSpec.configure do |config|
