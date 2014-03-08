@@ -12,6 +12,8 @@ module StaticRecord
       @records = records
       @where_values = []
       @order_values = []
+      @limit = nil
+      @offset = nil
     end
 
     def find_by_id(id)
@@ -50,6 +52,14 @@ module StaticRecord
       spawn.order!(*ordering)
     end
 
+    def limit(amount)
+      spawn.limit!(amount)
+    end
+
+    def offset(amount)
+      spawn.offset!(amount)
+    end
+
     def respond_to_missing(method_name, *)
       array_delegable?(method_name) || super
     end
@@ -66,7 +76,7 @@ module StaticRecord
     end
 
     def query_results
-      sort_records(filter_records(@records))
+      slice_records(sort_records(filter_records(@records)))
     end
 
     def filter_records(records)
@@ -83,6 +93,14 @@ module StaticRecord
       records.sort do |a, b|
         compare(a, b)
       end
+    end
+
+    def slice_records(records)
+      return records unless @limit || @offset
+
+      first = @offset || 0
+      last = first + (@limit || records.length)
+      records[first...last]
     end
 
     def compare(a, b)
@@ -114,6 +132,16 @@ module StaticRecord
       @order_values += ordering.map do |order|
         order.respond_to?(:to_a) ? order.to_a : [[order, :asc]]
       end.flatten(1)
+      self
+    end
+
+    def limit!(amount)
+      @limit = amount
+      self
+    end
+
+    def offset!(amount)
+      @offset = amount
       self
     end
 

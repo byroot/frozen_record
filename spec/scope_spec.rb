@@ -107,6 +107,26 @@ describe 'querying' do
 
   end
 
+  describe '.limit' do
+
+    it 'retuns only the amount of required records' do
+      countries = Country.limit(1)
+      expect(countries.length).to be == 1
+      expect(countries.to_a).to be == [Country.first]
+    end
+
+  end
+
+  describe '.offset' do
+
+    it 'skip the amount of required records' do
+      countries = Country.offset(1)
+      expect(countries.length).to be == 2
+      expect(countries.to_a).to be == [Country.find(2), Country.find(3)]
+    end
+
+  end
+
   describe '.pluck' do
 
     context 'when called with a single argument' do
