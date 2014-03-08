@@ -1,7 +1,10 @@
+require 'set'
+
 module FrozenRecord
   class Base
     extend ActiveModel::Naming
     include ActiveModel::Conversion
+    include ActiveModel::AttributeMethods
     include ActiveModel::Serializers::JSON
     include ActiveModel::Serializers::Xml
 
@@ -11,6 +14,8 @@ module FrozenRecord
 
     class_attribute :primary_key
     self.primary_key = :id
+
+    attribute_method_suffix '?'
 
     class << self
 
@@ -24,8 +29,27 @@ module FrozenRecord
       private
 
       def load_records
-        records = YAML.load_file(file_path) || []
-        records.map(&method(:new)).freeze
+        @records ||= begin
+          records = YAML.load_file(file_path) || []
+          define_attributes!(list_attributes(records))
+          records.map(&method(:new)).freeze
+        end
+      end
+
+      def list_attributes(records)
+        attributes = Set.new
+        records.each do |record|
+          record.keys.each do |key|
+            attributes.add(key.to_sym)
+          end
+        end
+        attributes
+      end
+
+      def define_attributes!(attributes)
+        attributes.each do |attr|
+          define_attribute_method(attr)
+        end
       end
 
       def file_path
@@ -42,12 +66,13 @@ module FrozenRecord
     end
 
     def id
-      @attributes[primary_key.to_sym]
+      self[primary_key]
     end
 
     def [](attr)
       @attributes[attr.to_sym]
     end
+    alias_method :attribute, :[]
 
     def ==(other)
       super || other.is_a?(self.class) && other.id == id
@@ -63,18 +88,8 @@ module FrozenRecord
 
     private
 
-    def query_attribute(attribute_name)
+    def attribute?(attribute_name)
       FALSY_VALUES.exclude?(self[attribute_name]) && self[attribute_name].present?
-    end
-
-    def method_missing(method_name, *args)
-      if method_name.to_s =~ /(.*)(\?)/
-        return query_attribute($1.to_sym)
-      end
-
-      return super unless @attributes.has_key?(method_name)
-
-      @attributes[method_name]
     end
 
   end

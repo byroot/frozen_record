@@ -50,6 +50,8 @@ describe FrozenRecord::Base do
         population: 33.88,
         founded_on: Date.parse('1867-07-01'),
         updated_at: Time.parse('2014-02-24T19:08:06-05:00'),
+        king: 'Elisabeth II',
+        nato: true
       }
     end
 
