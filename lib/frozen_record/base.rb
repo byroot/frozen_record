@@ -35,6 +35,8 @@ module FrozenRecord
 
     end
 
+    attr_reader :attributes
+
     def initialize(attrs = {})
       @attributes = attrs.symbolize_keys
     end
