@@ -87,7 +87,7 @@ module StaticRecord
     include ActiveModel::Serializers::JSON
     include ActiveModel::Serializers::Xml
 
-    FALSY_VALUES = [false, nil, 0, ''].to_set
+    FALSY_VALUES = [false, nil, 0,n ''].to_set
 
     class_attribute :base_path
 
