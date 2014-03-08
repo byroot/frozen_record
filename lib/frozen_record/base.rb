@@ -29,6 +29,7 @@ module FrozenRecord
       end
 
       def file_path
+        raise "You must define `#{name}.base_path`" unless base_path
         File.join(base_path, "#{name.underscore.pluralize}.yml")
       end
 

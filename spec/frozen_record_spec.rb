@@ -2,6 +2,17 @@ require 'spec_helper'
 
 describe FrozenRecord::Base do
 
+  describe '.base_path' do
+
+    it 'raise a RuntimeError  on first query attempt if not set' do
+      Country.stub(:base_path).and_return(nil)
+      expect {
+        Country.file_path
+      }.to raise_error
+    end
+
+  end
+
   describe '#==' do
 
     it 'returns true if both instances are from the same class and have the same id' do
