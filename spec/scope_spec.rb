@@ -44,6 +44,17 @@ describe 'querying' do
       }.to raise_error(FrozenRecord::RecordNotFound)
     end
 
+    it 'raises a FrozenRecord::RecordNotFound error if the id exist but do not match criterias' do
+      expect {
+        Country.where.not(id: 1).find(1)
+      }.to raise_error(FrozenRecord::RecordNotFound)
+    end
+
+    it 'is not restricted by :limit and :offset' do
+      country = Country.offset(100).limit(1).find(1)
+      expect(country).to be == Country.first
+    end
+
   end
 
   describe '.find_by_id' do

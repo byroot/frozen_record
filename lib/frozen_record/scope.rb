@@ -28,7 +28,7 @@ module FrozenRecord
     end
 
     def find_by_id(id)
-      @records.find { |r| r.id == id }
+      matching_records.find { |r| r.id == id }
     end
 
     def find(id)
@@ -91,11 +91,16 @@ module FrozenRecord
 
     def clear_cache!
       @results = nil
+      @matches = nil
       self
     end
 
     def query_results
-      slice_records(sort_records(select_records(@records)))
+      @results ||= slice_records(matching_records)
+    end
+
+    def matching_records
+      @matches ||= sort_records(select_records(@records))
     end
 
     def select_records(records)
@@ -120,7 +125,7 @@ module FrozenRecord
 
       first = @offset || 0
       last = first + (@limit || records.length)
-      records[first...last]
+      records[first...last] || []
     end
 
     def compare(a, b)
