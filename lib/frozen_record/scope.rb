@@ -1,4 +1,4 @@
-module StaticRecord
+module FrozenRecord
   class Scope
     BLACKLISTED_ARRAY_METHODS = [
       :compact!, :flatten!, :reject!, :reverse!, :rotate!, :map!,

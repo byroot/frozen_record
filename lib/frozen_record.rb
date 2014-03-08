@@ -2,10 +2,10 @@ require 'set'
 require 'active_support/all'
 require 'active_model'
 
-require 'static_record/version'
-require 'static_record/scope'
-require 'static_record/base'
+require 'frozen_record/version'
+require 'frozen_record/scope'
+require 'frozen_record/base'
 
-module StaticRecord
+module FrozenRecord
   RecordNotFound = Class.new(StandardError)
 end

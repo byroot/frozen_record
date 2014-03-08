@@ -38,10 +38,10 @@ describe 'querying' do
       expect(country.name).to be == 'Canada'
     end
 
-    it 'raises a StaticRecord::RecordNotFound error if the id do not exist' do
+    it 'raises a FrozenRecord::RecordNotFound error if the id do not exist' do
       expect {
         Country.find(42)
-      }.to raise_error(StaticRecord::RecordNotFound)
+      }.to raise_error(FrozenRecord::RecordNotFound)
     end
 
   end

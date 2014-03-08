@@ -1,4 +1,4 @@
-class Car < StaticRecord::Base
+class Car < FrozenRecord::Base
   self.base_path = File.join(File.dirname(__FILE__), '..', 'fixtures')
 
 end

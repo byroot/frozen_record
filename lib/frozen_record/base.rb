@@ -1,4 +1,4 @@
-module StaticRecord
+module FrozenRecord
   class Base
     extend ActiveModel::Naming
     include ActiveModel::Conversion

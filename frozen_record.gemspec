@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'static_record/version'
+require 'frozen_record/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'static_record'
-  spec.version       = StaticRecord::VERSION
+  spec.name          = 'frozen_record'
+  spec.version       = FrozenRecord::VERSION
   spec.authors       = ['Jean Boussier']
   spec.email         = ['jean.boussier@gmail.com']
   spec.summary       = %q{TODO: Write a short summary. Required.}

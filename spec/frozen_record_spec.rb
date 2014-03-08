@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe StaticRecord::Base do
+describe FrozenRecord::Base do
 
   describe '#==' do
 
