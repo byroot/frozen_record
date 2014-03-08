@@ -76,6 +76,22 @@ describe 'querying' do
 
   end
 
+  describe '.where.not' do
+
+    it 'returns the records that do not mach given criterias' do
+      countries = Country.where.not(name: 'France')
+      expect(countries.length).to be == 2
+      expect(countries.map(&:name)).to be == %w(Canada Austria)
+    end
+
+    it 'is chainable' do
+      countries = Country.where.not(name: 'France').where(id: 1)
+      expect(countries.length).to be == 1
+      expect(countries.map(&:name)).to be == %w(Canada)
+    end
+
+  end
+
   describe '.order' do
 
     context 'when pased one argument' do

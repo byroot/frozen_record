@@ -8,9 +8,20 @@ module StaticRecord
 
     delegate :length, :collect, :map, :each, :all?, :include?, :to_ary, to: :to_a
 
+    class WhereChain
+      def initialize(scope)
+        @scope = scope
+      end
+
+      def not(criterias)
+        @scope.where_not(criterias)
+      end
+    end
+
     def initialize(records)
       @records = records
       @where_values = []
+      @where_not_values = []
       @order_values = []
       @limit = nil
       @offset = nil
@@ -44,8 +55,16 @@ module StaticRecord
       !empty?
     end
 
-    def where(criterias)
-      spawn.where!(criterias)
+    def where(criterias = :chain)
+      if criterias == :chain
+        WhereChain.new(self)
+      else
+        spawn.where!(criterias)
+      end
+    end
+
+    def where_not(criterias)
+      spawn.where_not!(criterias)
     end
 
     def order(*ordering)
@@ -76,14 +95,15 @@ module StaticRecord
     end
 
     def query_results
-      slice_records(sort_records(filter_records(@records)))
+      slice_records(sort_records(select_records(@records)))
     end
 
-    def filter_records(records)
-      return records if @where_values.empty?
+    def select_records(records)
+      return records if @where_values.empty? && @where_not_values.empty?
 
       records.select do |record|
-        @where_values.all? { |attr, value| record[attr] == value }
+        @where_values.all? { |attr, value| record[attr] == value } &&
+        @where_not_values.all? { |attr, value| record[attr] != value }
       end
     end
 
@@ -125,6 +145,11 @@ module StaticRecord
 
     def where!(criterias)
       @where_values += criterias.to_a
+      self
+    end
+
+    def where_not!(criterias)
+      @where_not_values += criterias.to_a
       self
     end
 
