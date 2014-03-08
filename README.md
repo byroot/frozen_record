@@ -85,6 +85,10 @@ Country.
 
   - count
   - pluck
+  - minimum
+  - minimum
+  - sum
+  - average
 
 ## Contributors
 

@@ -18,7 +18,8 @@ module FrozenRecord
         @scope ||= Scope.new(load_records)
       end
 
-      delegate :find, :find_by_id, :where, :first, :last, :pluck, :order, :limit, :offset, to: :all
+      delegate :find, :find_by_id, :where, :first, :last, :pluck, :order, :limit, :offset,
+               :minimum, :maximum, :average, :sum, to: :all
 
       private
 

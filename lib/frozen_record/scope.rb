@@ -51,6 +51,22 @@ module FrozenRecord
       end
     end
 
+    def sum(attribute)
+      pluck(attribute).sum
+    end
+
+    def average(attribute)
+      pluck(attribute).sum.to_f / count
+    end
+
+    def minimum(attribute)
+      pluck(attribute).min
+    end
+
+    def maximum(attribute)
+      pluck(attribute).max
+    end
+
     def exists?
       !empty?
     end

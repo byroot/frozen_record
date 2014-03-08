@@ -3,6 +3,7 @@
   name: Canada
   capital: Ottawa
   density: 3.5
+  population: 33.88
   founded_on: 1867-07-01
   updated_at: 2014-02-24T19:08:06-05:00
 
@@ -10,6 +11,7 @@
   name: France
   capital: Paris
   density: 116
+  population: 65.7
   founded_on: 486-01-01
   updated_at: 2014-02-12T19:02:03-02:00
 
@@ -17,5 +19,6 @@
   name: Austria
   capital: Vienna
   density: 100.3
+  population: 8.462
   founded_on: 1156-01-01
   updated_at: 2014-02-12T19:02:03-02:00

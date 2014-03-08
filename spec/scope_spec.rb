@@ -214,4 +214,40 @@ describe 'querying' do
 
   end
 
+  describe '.sum' do
+
+    it 'returns the sum of the column argument' do
+      sum = Country.sum(:population)
+      expect(sum).to be == 108.04200000000002
+    end
+
+  end
+
+  describe '.average' do
+
+    it 'returns the average of the column argument' do
+      average = Country.average(:density)
+      expect(average).to be == 73.26666666666667
+    end
+
+  end
+
+  describe '.minimum' do
+
+    it 'returns the average of the column argument' do
+      minimum = Country.minimum(:density)
+      expect(minimum).to be == 3.5
+    end
+
+  end
+
+  describe '.maximum' do
+
+    it 'returns the average of the column argument' do
+      maximum = Country.maximum(:density)
+      expect(maximum).to be == 116
+    end
+
+  end
+
 end
