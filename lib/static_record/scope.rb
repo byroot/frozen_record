@@ -26,6 +26,17 @@ module StaticRecord
       @results ||= query_results
     end
 
+    def pluck(*attributes)
+      case attributes.length
+      when 1
+        to_a.map(&attributes.first)
+      when 0
+        raise NotImplementedError, '`.pluck` without arguments is not supported yet'
+      else
+        to_a.map { |r| attributes.map { |a| r[a] }}
+      end
+    end
+
     def exists?
       !empty?
     end
