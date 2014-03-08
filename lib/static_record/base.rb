@@ -18,7 +18,7 @@ module StaticRecord
         @scope ||= Scope.new(load_records)
       end
 
-      delegate :find, :find_by_id, :where, :first, :last, :pluck, to: :all
+      delegate :find, :find_by_id, :where, :first, :last, :pluck, :order, to: :all
 
       private
 

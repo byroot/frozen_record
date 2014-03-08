@@ -18,9 +18,9 @@ describe 'querying' do
 
   describe '.last' do
 
-    it 'returns the first country' do
+    it 'returns the last country' do
       country = Country.last
-      expect(country.id).to be == 2
+      expect(country.id).to be == 3
     end
 
     it 'can be called on any scope' do
@@ -76,13 +76,44 @@ describe 'querying' do
 
   end
 
+  describe '.order' do
+
+    context 'when pased one argument' do
+
+      it 'reorder records by given attribute in ascending order' do
+        countries = Country.order(:name).pluck(:name)
+        expect(countries).to be == %w(Austria Canada France)
+      end
+
+    end
+
+    context 'when passed multiple arguments' do
+
+      it 'reorder records by given attributes in ascending order' do
+        countries = Country.order(:updated_at, :name).pluck(:name)
+        expect(countries).to be == %w(Austria France Canada)
+      end
+
+    end
+
+    context 'when passed a hash' do
+
+      it 'records records by given attribute and specified order' do
+        countries = Country.order(name: :desc).pluck(:name)
+        expect(countries).to be == %w(France Canada Austria)
+      end
+
+    end
+
+  end
+
   describe '.pluck' do
 
     context 'when called with a single argument' do
 
       it 'returns an array of values' do
         names = Country.pluck(:name)
-        expect(names).to be == %w(Canada France)
+        expect(names).to be == %w(Canada France Austria)
       end
 
     end
@@ -91,7 +122,7 @@ describe 'querying' do
 
       it 'returns an array of arrays' do
         names = Country.pluck(:id, :name)
-        expect(names).to be == [[1, 'Canada'], [2, 'France']]
+        expect(names).to be == [[1, 'Canada'], [2, 'France'], [3, 'Austria']]
       end
 
     end
@@ -100,7 +131,7 @@ describe 'querying' do
 
       it 'returns an array of arrays' do
         names = Country.pluck(:id, :name)
-        expect(names).to be == [[1, 'Canada'], [2, 'France']]
+        expect(names).to be == [[1, 'Canada'], [2, 'France'], [3, 'Austria']]
       end
 
     end

@@ -11,6 +11,7 @@ module StaticRecord
     def initialize(records)
       @records = records
       @where_values = []
+      @order_values = []
     end
 
     def find_by_id(id)
@@ -45,6 +46,10 @@ module StaticRecord
       spawn.where!(criterias)
     end
 
+    def order(*ordering)
+      spawn.order!(*ordering)
+    end
+
     def respond_to_missing(method_name, *)
       array_delegable?(method_name) || super
     end
@@ -61,10 +66,33 @@ module StaticRecord
     end
 
     def query_results
-      criterias = @where_values.map(&:to_a).flatten(1)
-      @records.select do |record|
-        criterias.all? { |attr, value| record[attr] == value }
+      sort_records(filter_records(@records))
+    end
+
+    def filter_records(records)
+      return records if @where_values.empty?
+
+      records.select do |record|
+        @where_values.all? { |attr, value| record[attr] == value }
       end
+    end
+
+    def sort_records(records)
+      return records if @order_values.empty?
+
+      records.sort do |a, b|
+        compare(a, b)
+      end
+    end
+
+    def compare(a, b)
+      @order_values.each do |attr, order|
+        a_value, b_value = a[attr], b[attr]
+        cmp = a_value <=> b_value
+        next if cmp == 0
+        return order == :asc ? cmp : -cmp
+      end
+      0
     end
 
     def method_missing(method_name, *args, &block)
@@ -78,7 +106,14 @@ module StaticRecord
     end
 
     def where!(criterias)
-      @where_values += [criterias]
+      @where_values += criterias.to_a
+      self
+    end
+
+    def order!(*ordering)
+      @order_values += ordering.map do |order|
+        order.respond_to?(:to_a) ? order.to_a : [[order, :asc]]
+      end.flatten(1)
       self
     end
 

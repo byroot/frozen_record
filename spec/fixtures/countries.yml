@@ -12,3 +12,10 @@
   density: 116
   founded_on: 486-01-01
   updated_at: 2014-02-12T19:02:03-02:00
+
+- id: 3
+  name: Austria
+  capital: Vienna
+  density: 100.3
+  founded_on: 1156-01-01
+  updated_at: 2014-02-12T19:02:03-02:00
