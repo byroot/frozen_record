@@ -26,6 +26,11 @@ module FrozenRecord
       delegate :find, :find_by_id, :where, :first, :first!, :last, :last!, :pluck, :order, :limit, :offset,
                :minimum, :maximum, :average, :sum, to: :all
 
+      def file_path
+        raise "You must define `#{name}.base_path`" unless base_path
+        File.join(base_path, "#{name.underscore.pluralize}.yml")
+      end
+
       private
 
       def method_missing(name, *args)
@@ -62,11 +67,6 @@ module FrozenRecord
         attributes.each do |attr|
           define_attribute_method(attr)
         end
-      end
-
-      def file_path
-        raise "You must define `#{name}.base_path`" unless base_path
-        File.join(base_path, "#{name.underscore.pluralize}.yml")
       end
 
     end
