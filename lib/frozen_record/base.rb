@@ -23,10 +23,22 @@ module FrozenRecord
         @scope ||= Scope.new(load_records)
       end
 
-      delegate :find, :find_by_id, :where, :first, :last, :pluck, :order, :limit, :offset,
+      delegate :find, :find_by_id, :where, :first, :first!, :last, :last!, :pluck, :order, :limit, :offset,
                :minimum, :maximum, :average, :sum, to: :all
 
       private
+
+      def method_missing(name, *args)
+        if name.to_s =~ /\Afind_by_(\w+)(!?)/
+          return dynamic_match($1, args, $2.present?)
+        end
+        super
+      end
+
+      def dynamic_match(expression, values, bang)
+        results = where(expression.split('_and_').zip(values))
+        bang ? results.first! : results.first
+      end
 
       def load_records
         @records ||= begin

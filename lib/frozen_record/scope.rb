@@ -36,6 +36,14 @@ module FrozenRecord
       find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
     end
 
+    def first!
+      first or raise RecordNotFound, "No record matched"
+    end
+
+    def last!
+      last! or raise RecordNotFound, "No record matched"
+    end
+
     def to_a
       @results ||= query_results
     end

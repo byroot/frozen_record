@@ -72,6 +72,35 @@ describe 'querying' do
 
   end
 
+  describe 'dynamic_matchers' do
+
+    it 'returns the first matching record' do
+      country = Country.find_by_name_and_density('France', 116)
+      expect(country.name).to be == 'France'
+    end
+
+    it 'returns nil if no records match' do
+      country = Country.find_by_name_and_density('England', 116)
+      expect(country).to be_nil
+    end
+
+  end
+
+  describe 'dynamic_matchers!' do
+
+    it 'returns the first matching record' do
+      country = Country.find_by_name_and_density!('France', 116)
+      expect(country.name).to be == 'France'
+    end
+
+    it 'returns nil if no records match' do
+      expect {
+        Country.find_by_name_and_density!('England', 116)
+      }.to raise_error(FrozenRecord::RecordNotFound)
+    end
+
+  end
+
   describe '.where' do
 
     it 'returns the records that match given criterias' do
