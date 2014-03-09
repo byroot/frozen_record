@@ -288,6 +288,15 @@ describe 'querying' do
 
   end
 
+  describe '.as_json' do
+
+    it 'serialize the results' do
+      json = Country.all.as_json
+      expect(json).to be == Country.all.to_a.as_json
+    end
+
+  end
+
   describe '.to_xml' do
 
     it 'serialize the results' do

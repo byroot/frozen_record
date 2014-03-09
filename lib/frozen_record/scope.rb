@@ -6,7 +6,7 @@ module FrozenRecord
       :keep_if, :pop, :shift, :delete_at, :compact
     ].to_set
 
-    delegate :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :to_xml, to: :to_a
+    delegate :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :to_xml, :as_json, to: :to_a
 
     class WhereChain
       def initialize(scope)
