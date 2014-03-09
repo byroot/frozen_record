@@ -43,15 +43,15 @@ describe FrozenRecord::Base do
     it 'returns a Hash of the record attributes' do
       attributes = Country.first.attributes
       expect(attributes).to be == {
-        id: 1,
-        name: 'Canada',
-        capital: 'Ottawa', 
-        density: 3.5,
-        population: 33.88,
-        founded_on: Date.parse('1867-07-01'),
-        updated_at: Time.parse('2014-02-24T19:08:06-05:00'),
-        king: 'Elisabeth II',
-        nato: true
+        'id' => 1,
+        'name' => 'Canada',
+        'capital' => 'Ottawa', 
+        'density' => 3.5,
+        'population' => 33.88,
+        'founded_on' => Date.parse('1867-07-01'),
+        'updated_at' => Time.parse('2014-02-24T19:08:06-05:00'),
+        'king' => 'Elisabeth II',
+        'nato' => true,
       }
     end
 

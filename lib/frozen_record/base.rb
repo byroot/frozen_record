@@ -52,7 +52,7 @@ module FrozenRecord
         attributes = Set.new
         records.each do |record|
           record.keys.each do |key|
-            attributes.add(key.to_sym)
+            attributes.add(key.to_s)
           end
         end
         attributes
@@ -74,7 +74,7 @@ module FrozenRecord
     attr_reader :attributes
 
     def initialize(attrs = {})
-      @attributes = attrs.symbolize_keys
+      @attributes = attrs.stringify_keys
     end
 
     def id
@@ -82,7 +82,7 @@ module FrozenRecord
     end
 
     def [](attr)
-      @attributes[attr.to_sym]
+      @attributes[attr.to_s]
     end
     alias_method :attribute, :[]
 
