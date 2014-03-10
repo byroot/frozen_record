@@ -31,6 +31,12 @@ module FrozenRecord
         File.join(base_path, "#{name.underscore.pluralize}.yml")
       end
 
+      def respond_to_missing?(name, *)
+        if name.to_s =~ /\Afind_by_(\w+)(!?)/
+          return true if $1.split('_and_').all? { |attr| public_method_defined?(attr) }
+        end
+      end
+
       private
 
       def method_missing(name, *args)
