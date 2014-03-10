@@ -16,6 +16,22 @@ describe 'querying' do
 
   end
 
+  describe '.first!' do
+
+    it 'raises if no record found' do
+      expect {
+        Country.where(name: 'not existing').first!
+      }.to raise_error(FrozenRecord::RecordNotFound)
+    end
+
+    it 'doesn\'t raise if record found' do
+      expect {
+        Country.first!
+      }.to_not raise_error(FrozenRecord::RecordNotFound)
+    end
+
+  end
+
   describe '.last' do
 
     it 'returns the last country' do
@@ -26,6 +42,22 @@ describe 'querying' do
     it 'can be called on any scope' do
       country = Country.where(name: 'Canada').last
       expect(country.id).to be == 1
+    end
+
+  end
+
+  describe '.last!' do
+
+    it 'raises if no record found' do
+      expect {
+        Country.where(name: 'not existing').last!
+      }.to raise_error(FrozenRecord::RecordNotFound)
+    end
+
+    it 'doesn\'t raise if record found' do
+      expect {
+        Country.last!
+      }.to_not raise_error(FrozenRecord::RecordNotFound)
     end
 
   end
