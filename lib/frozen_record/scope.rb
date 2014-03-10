@@ -6,7 +6,7 @@ module FrozenRecord
       :keep_if, :pop, :shift, :delete_at, :compact
     ].to_set
 
-    delegate :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :to_xml, :as_json, to: :to_a
+    delegate :first, :last, :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :to_xml, :as_json, to: :to_a
 
     class WhereChain
       def initialize(scope)
@@ -41,7 +41,7 @@ module FrozenRecord
     end
 
     def last!
-      last! or raise RecordNotFound, "No record matched"
+      last or raise RecordNotFound, "No record matched"
     end
 
     def to_a
