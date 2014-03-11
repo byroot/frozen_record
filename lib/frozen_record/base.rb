@@ -8,6 +8,7 @@ module FrozenRecord
     include ActiveModel::Serializers::JSON
     include ActiveModel::Serializers::Xml
 
+    FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
     FALSY_VALUES = [false, nil, 0, ''].to_set
 
     class_attribute :base_path
@@ -32,7 +33,7 @@ module FrozenRecord
       end
 
       def respond_to_missing?(name, *)
-        if name.to_s =~ /\Afind_by_(\w+)(!?)/
+        if name.to_s =~ FIND_BY_PATTERN
           return true if $1.split('_and_').all? { |attr| public_method_defined?(attr) }
         end
       end
@@ -40,7 +41,7 @@ module FrozenRecord
       private
 
       def method_missing(name, *args)
-        if name.to_s =~ /\Afind_by_(\w+)(!?)/
+        if name.to_s =~ FIND_BY_PATTERN
           return dynamic_match($1, args, $2.present?)
         end
         super
