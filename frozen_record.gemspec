@@ -8,8 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = FrozenRecord::VERSION
   spec.authors       = ['Jean Boussier']
   spec.email         = ['jean.boussier@gmail.com']
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{ActiveRecord like interface to read only access and query static YAML files}
   spec.homepage      = ''
   spec.license       = 'MIT'
 
