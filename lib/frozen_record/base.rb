@@ -18,15 +18,33 @@ module FrozenRecord
 
     attribute_method_suffix '?'
 
+    class ThreadSafeStorage
+
+      def initialize(key)
+        @thread_key = key
+      end
+
+      def [](key)
+        Thread.current[@thread_key] ||= {}
+        Thread.current[@thread_key][key]
+      end
+
+      def []=(key, value)
+        Thread.current[@thread_key] ||= {}
+        Thread.current[@thread_key][key] = value
+      end
+
+    end
+
     class << self
 
       def current_scope
-        @current_scope ||= Scope.new(self, load_records)
+        store[:scope] ||= Scope.new(self, load_records)
       end
       alias_method :all, :current_scope
 
       def current_scope=(scope)
-        @current_scope = scope
+        store[:scope] = scope
       end
 
       delegate :find, :find_by_id, :where, :first, :first!, :last, :last!, :pluck, :order, :limit, :offset,
@@ -44,6 +62,10 @@ module FrozenRecord
       end
 
       private
+
+      def store
+        @store = ThreadSafeStorage.new(name)
+      end
 
       def method_missing(name, *args)
         if name.to_s =~ FIND_BY_PATTERN
