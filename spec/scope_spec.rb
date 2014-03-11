@@ -346,4 +346,13 @@ describe 'querying' do
 
   end
 
+  describe 'class methods delegation' do
+
+    it 'can be called from a scope' do
+      ids = Country.where(name: 'France').republics.pluck(:id)
+      expect(ids).to be == [2]
+    end
+
+  end
+
 end

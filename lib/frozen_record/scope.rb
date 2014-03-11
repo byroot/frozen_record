@@ -18,7 +18,8 @@ module FrozenRecord
       end
     end
 
-    def initialize(records)
+    def initialize(klass, records)
+      @klass = klass
       @records = records
       @where_values = []
       @where_not_values = []
@@ -109,6 +110,13 @@ module FrozenRecord
 
     protected
 
+    def scoping
+      previous, @klass.current_scope = @klass.current_scope, self
+      yield
+    ensure
+      @klass.current_scope = previous
+    end
+
     def spawn
       clone.clear_cache!
     end
@@ -163,9 +171,17 @@ module FrozenRecord
     end
 
     def method_missing(method_name, *args, &block)
-      return super unless array_delegable?(method_name)
+      if array_delegable?(method_name)
+        to_a.public_send(method_name, *args, &block) 
+      elsif @klass.respond_to?(method_name)
+        delegate_to_class(method_name, *args, &block)
+      else
+        super
+      end
+    end
 
-      to_a.public_send(method_name, *args, &block)
+    def delegate_to_class(*args, &block)
+      scoping { @klass.public_send(*args, &block) }
     end
 
     def array_delegable?(method)

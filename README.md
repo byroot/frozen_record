@@ -65,6 +65,24 @@ Country.
   order('id DESC')
 ```
 
+### Scopes
+
+While the `scope :symbol, lambda` syntax is not supported, the class methods way is:
+
+```ruby
+class Country
+  def self.republics
+    where(king: nil)
+  end
+
+  def self.part_of_nato
+    where(nato: true)
+  end
+end
+
+Country.republics.part_of_nato.order(id: :desc)
+```
+
 ### Supported query methods
 
   - where
@@ -89,6 +107,7 @@ Country.
   - minimum
   - sum
   - average
+
 
 ## Contributors
 

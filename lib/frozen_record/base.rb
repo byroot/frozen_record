@@ -20,12 +20,17 @@ module FrozenRecord
 
     class << self
 
-      def all
-        @scope ||= Scope.new(load_records)
+      def current_scope
+        @current_scope ||= Scope.new(self, load_records)
+      end
+      alias_method :all, :current_scope
+
+      def current_scope=(scope)
+        @current_scope = scope
       end
 
       delegate :find, :find_by_id, :where, :first, :first!, :last, :last!, :pluck, :order, :limit, :offset,
-               :minimum, :maximum, :average, :sum, to: :all
+               :minimum, :maximum, :average, :sum, to: :current_scope
 
       def file_path
         raise "You must define `#{name}.base_path`" unless base_path
