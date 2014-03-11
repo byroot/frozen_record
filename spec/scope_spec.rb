@@ -27,7 +27,7 @@ describe 'querying' do
     it 'doesn\'t raise if record found' do
       expect {
         Country.first!
-      }.to_not raise_error(FrozenRecord::RecordNotFound)
+      }.to_not raise_error
     end
 
   end
@@ -57,7 +57,7 @@ describe 'querying' do
     it 'doesn\'t raise if record found' do
       expect {
         Country.last!
-      }.to_not raise_error(FrozenRecord::RecordNotFound)
+      }.to_not raise_error
     end
 
   end
