@@ -154,6 +154,16 @@ describe 'querying' do
       expect(countries).to be_empty
     end
 
+    it 'can be used with arrays' do
+      countries = Country.where(id: [1,2])
+      expect(countries.length).to be == 2
+    end
+
+    it 'can be used with ranges' do
+      countries = Country.where(id: (1..2))
+      expect(countries.length).to be == 2
+    end
+
   end
 
   describe '.where.not' do
