@@ -139,8 +139,8 @@ module FrozenRecord
       return records if @where_values.empty? && @where_not_values.empty?
 
       records.select do |record|
-        @where_values.all? { |attr, value| record[attr] == value } &&
-        @where_not_values.all? { |attr, value| record[attr] != value }
+        @where_values.all? { |attr, value| compare_value(record[attr], value) } &&
+        @where_not_values.all? { |attr, value| !compare_value(record[attr], value) }
       end
     end
 
@@ -172,7 +172,7 @@ module FrozenRecord
 
     def method_missing(method_name, *args, &block)
       if array_delegable?(method_name)
-        to_a.public_send(method_name, *args, &block) 
+        to_a.public_send(method_name, *args, &block)
       elsif @klass.respond_to?(method_name)
         delegate_to_class(method_name, *args, &block)
       else
@@ -215,5 +215,10 @@ module FrozenRecord
       self
     end
 
+    private
+    def compare_value(actual, requested)
+      return actual == requested unless requested.is_a?(Array) || requested.is_a?(Range)
+      requested.include?(actual)
+    end
   end
 end
