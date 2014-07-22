@@ -64,35 +64,35 @@ describe FrozenRecord::Base do
     let(:present) { Country.new(id: 42, name: 'Groland', nato: true, king: Object.new) }
 
     it 'considers `0` as missing' do
-      expect(blank.id?).to be_false
+      expect(blank.id?).to be false
     end
 
     it 'considers `""` as missing' do
-      expect(blank.name?).to be_false
+      expect(blank.name?).to be false
     end
 
     it 'considers `false` as missing' do
-      expect(blank.nato?).to be_false
+      expect(blank.nato?).to be false
     end
 
     it 'considers `nil` as missing' do
-      expect(blank.king?).to be_false
+      expect(blank.king?).to be false
     end
 
     it 'considers other numbers than `0` as present' do
-      expect(present.id?).to be_true
+      expect(present.id?).to be true
     end
 
     it 'considers other strings than `""` as present' do
-      expect(present.name?).to be_true
+      expect(present.name?).to be true
     end
 
     it 'considers `true` as present' do
-      expect(present.nato?).to be_true
+      expect(present.nato?).to be true
     end
 
     it 'considers not `nil` objects as present' do
-      expect(present.king?).to be_true
+      expect(present.king?).to be true
     end
 
   end

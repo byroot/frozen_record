@@ -151,7 +151,7 @@ describe 'querying' do
 
     it 'is chainable' do
       countries = Country.where(name: 'France').where(id: 1)
-      expect(countries).to be_empty
+      expect(countries.length).to be == 0
     end
 
     it 'can be used with arrays' do
