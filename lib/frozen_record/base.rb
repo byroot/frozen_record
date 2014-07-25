@@ -64,7 +64,7 @@ module FrozenRecord
       private
 
       def store
-        @store = ThreadSafeStorage.new(name)
+        @store ||= ThreadSafeStorage.new(name)
       end
 
       def method_missing(name, *args)
