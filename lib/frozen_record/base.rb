@@ -21,7 +21,7 @@ module FrozenRecord
     class ThreadSafeStorage
 
       def initialize(key)
-        @thread_key = key
+        @thread_key = "#{ self.object_id }-#{ key }"
       end
 
       def [](key)
@@ -64,7 +64,7 @@ module FrozenRecord
       private
 
       def store
-        @store = ThreadSafeStorage.new(name)
+        @store ||= ThreadSafeStorage.new(name)
       end
 
       def method_missing(name, *args)
