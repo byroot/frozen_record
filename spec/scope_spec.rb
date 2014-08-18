@@ -121,13 +121,13 @@ describe 'querying' do
   describe '.find_by!' do
 
     it 'returns the first matching record' do
-      country = Country.find_by(name: 'France', density: 116)
+      country = Country.find_by!(name: 'France', density: 116)
       expect(country.name).to be == 'France'
     end
 
     it 'returns nil if no records match' do
       expect {
-        Country.find_by_name_and_density!('England', 116)
+        Country.find_by!(name: 'England', density: 116)
       }.to raise_error(FrozenRecord::RecordNotFound)
     end
 
