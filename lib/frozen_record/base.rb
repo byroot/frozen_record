@@ -61,6 +61,10 @@ module FrozenRecord
         end
       end
 
+      def count
+        load_records.size
+      end
+
       private
 
       def store
