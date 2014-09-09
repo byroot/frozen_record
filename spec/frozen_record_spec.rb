@@ -45,7 +45,7 @@ describe FrozenRecord::Base do
       expect(attributes).to be == {
         'id' => 1,
         'name' => 'Canada',
-        'capital' => 'Ottawa', 
+        'capital' => 'Ottawa',
         'density' => 3.5,
         'population' => 33.88,
         'founded_on' => Date.parse('1867-07-01'),
@@ -97,4 +97,15 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '#count' do
+
+    it 'can count objects with no records' do
+      expect(Car.count).to be 0
+    end
+
+    it 'can count objects with records' do
+      expect(Country.count).to be 3
+    end
+
+  end
 end
