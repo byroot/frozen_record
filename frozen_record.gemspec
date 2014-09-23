@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Jean Boussier']
   spec.email         = ['jean.boussier@gmail.com']
   spec.summary       = %q{ActiveRecord like interface to read only access and query static YAML files}
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/byroot/frozen_record'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
