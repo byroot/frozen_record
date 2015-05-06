@@ -282,15 +282,6 @@ describe 'querying' do
 
     end
 
-    context 'when called with multiple arguments' do
-
-      it 'returns an array of arrays' do
-        names = Country.pluck(:id, :name)
-        expect(names).to be == [[1, 'Canada'], [2, 'France'], [3, 'Austria']]
-      end
-
-    end
-
     context 'when called without arguments' do
 
       pending 'returns an array of arrays containing all attributes in order'
@@ -302,6 +293,28 @@ describe 'querying' do
       it 'returns only the attributes of matching records' do
         names = Country.where(id: 1).pluck(:name)
         expect(names).to be == %w(Canada)
+      end
+
+    end
+
+  end
+
+  describe '.ids' do
+
+    context 'when called with no arguments' do
+
+      it 'returns an array of ids' do
+        ids = Country.ids
+        expect(ids).to be == [1, 2, 3]
+      end
+
+    end
+
+    context 'when called on a scope' do
+
+      it 'returns only the ids of matching records' do
+        ids = Country.where(capital: "Ottawa").ids
+        expect(ids).to be == [1]
       end
 
     end

@@ -47,7 +47,7 @@ module FrozenRecord
         store[:scope] = scope
       end
 
-      delegate :find, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!, :pluck, :order, :limit, :offset,
+      delegate :find, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!, :pluck, :ids, :order, :limit, :offset,
                :minimum, :maximum, :average, :sum, to: :current_scope
 
       def file_path
