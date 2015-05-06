@@ -69,7 +69,7 @@ module FrozenRecord
     end
 
     def ids
-      pluck primary_key
+      pluck(primary_key)
     end
 
     def sum(attribute)
