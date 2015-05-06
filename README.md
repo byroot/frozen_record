@@ -105,7 +105,7 @@ Country.republics.part_of_nato.order(id: :desc)
   - pluck
   - ids
   - minimum
-  - minimum
+  - maximum
   - sum
   - average
 
