@@ -5,10 +5,10 @@ describe FrozenRecord::Base do
   describe '.base_path' do
 
     it 'raise a RuntimeError  on first query attempt if not set' do
-      Country.stub(:base_path).and_return(nil)
+      allow(Country).to receive_message_chain(:base_path).and_return(nil)
       expect {
         Country.file_path
-      }.to raise_error
+      }.to raise_error(ArgumentError)
     end
 
   end
