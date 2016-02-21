@@ -1,7 +1,7 @@
 ---
 - id: 1
   name: Canada
-  capital: Ottawa
+  capital: <%= 'Ottawa' %>
   density: 3.5
   population: 33.88
   founded_on: 1867-07-01
@@ -11,7 +11,7 @@
 
 - id: 2
   name: France
-  capital: Paris
+  capital: <%= 'Paris' %>
   density: 116
   population: 65.7
   founded_on: 486-01-01
@@ -19,7 +19,7 @@
 
 - id: 3
   name: Austria
-  capital: Vienna
+  capital: <%= 'Vienna' %>
   density: 100.3
   population: 8.462
   founded_on: 1156-01-01

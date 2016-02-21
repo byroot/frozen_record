@@ -85,7 +85,10 @@ module FrozenRecord
 
       def load_records
         @records ||= begin
-          records = YAML.load_file(file_path) || []
+          yml_erb_data = File.read(file_path)
+          yml_data = ERB.new(yml_erb_data).result
+
+          records = YAML.load(yml_data) || []
           define_attributes!(list_attributes(records))
           records.map(&method(:new)).freeze
         end

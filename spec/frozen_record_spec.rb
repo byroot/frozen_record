@@ -13,6 +13,15 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '#load_records' do
+
+    it 'processes erb' do
+      country = Country.first
+      expect(country.capital).to be == 'Ottawa'
+    end
+
+  end
+
   describe '#==' do
 
     it 'returns true if both instances are from the same class and have the same id' do
