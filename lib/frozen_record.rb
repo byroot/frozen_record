@@ -1,3 +1,4 @@
+require 'yaml'
 require 'set'
 require 'active_support/all'
 require 'active_model'
