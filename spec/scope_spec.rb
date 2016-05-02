@@ -392,8 +392,9 @@ describe 'querying' do
   describe '.to_xml' do
 
     it 'serialize the results' do
-      json = Country.all.to_json
-      expect(json).to be == Country.all.to_a.to_json
+      skip('ActiveModel::Serializers::Xml is not defined (Active Model 5+ ?)') unless defined? ActiveModel::Serializers::Xml
+      xml = Country.all.to_xml
+      expect(xml).to be == Country.all.to_a.to_xml
     end
 
   end
