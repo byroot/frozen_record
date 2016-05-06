@@ -4,11 +4,51 @@ describe FrozenRecord::Base do
 
   describe '.base_path' do
 
-    it 'raise a RuntimeError  on first query attempt if not set' do
+    it 'raise a RuntimeError on first query attempt if not set' do
       allow(Country).to receive_message_chain(:base_path).and_return(nil)
       expect {
         Country.file_path
       }.to raise_error(ArgumentError)
+    end
+
+  end
+
+  describe '.auto_reloading' do
+
+    context 'when enabled' do
+
+      around do |example|
+        previous_auto_reloading = Country.auto_reloading
+        Country.auto_reloading = true
+        begin
+          example.run
+        ensure
+          Country.auto_reloading = previous_auto_reloading
+        end
+      end
+
+      it 'reloads the records if the file mtime changed' do
+        mtime = File.mtime(Country.file_path)
+        expect {
+          File.utime(mtime + 1, mtime + 1, Country.file_path)
+        }.to change { Country.first.object_id }
+      end
+
+      it 'does not reload if the file has not changed' do
+        expect(Country.first.object_id).to be == Country.first.object_id
+      end
+
+    end
+
+    context 'when disabled' do
+
+      it 'does not reloads the records if the file mtime changed' do
+        mtime = File.mtime(Country.file_path)
+        expect {
+          File.utime(mtime + 1, mtime + 1, Country.file_path)
+        }.to_not change { Country.first.object_id }
+      end
+
     end
 
   end

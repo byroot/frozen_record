@@ -110,6 +110,19 @@ Country.republics.part_of_nato.order(id: :desc)
   - average
 
 
+## Configuration
+
+### Reloading
+
+By default the YAML files are parsed once and then cached in memory. But in development you might want changes to be reflected without having to restart your application.
+
+For such cases you can set `auto_reloading` to `true` either globally or on a model basis:
+
+```ruby
+FrozenRecord::Base.auto_reloading = true # Activate reloading for all models
+Country.auto_reloading # Activate reloading for `Country` only
+```
+
 ## Contributors
 
 FrozenRecord is a from scratch reimplementation of a [Shopify](https://github.com/Shopify) project from 2007 named `YamlRecord`.

@@ -6,7 +6,7 @@ module FrozenRecord
       :keep_if, :pop, :shift, :delete_at, :compact
     ].to_set
 
-    delegate :first, :last, :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :as_json, to: :to_a
+    delegate :first, :last, :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :as_json, :count, to: :to_a
     if defined? ActiveModel::Serializers::Xml
       delegate :to_xml, to: :to_a
     end
@@ -21,9 +21,8 @@ module FrozenRecord
       end
     end
 
-    def initialize(klass, records)
+    def initialize(klass)
       @klass = klass
-      @records = records
       @where_values = []
       @where_not_values = []
       @order_values = []
@@ -57,7 +56,7 @@ module FrozenRecord
     end
 
     def to_a
-      @results ||= query_results
+      query_results
     end
 
     def pluck(*attributes)
@@ -143,11 +142,11 @@ module FrozenRecord
     end
 
     def query_results
-      @results ||= slice_records(matching_records)
+      slice_records(matching_records)
     end
 
     def matching_records
-      @matches ||= sort_records(select_records(@records))
+      sort_records(select_records(@klass.load_records))
     end
 
     def select_records(records)

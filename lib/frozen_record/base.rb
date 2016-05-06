@@ -19,6 +19,8 @@ module FrozenRecord
     class_attribute :primary_key
     self.primary_key = :id
 
+    class_attribute :auto_reloading
+
     attribute_method_suffix '?'
 
     class ThreadSafeStorage
@@ -42,7 +44,7 @@ module FrozenRecord
     class << self
 
       def current_scope
-        store[:scope] ||= Scope.new(self, load_records)
+        store[:scope] ||= Scope.new(self)
       end
       alias_method :all, :current_scope
 
@@ -51,7 +53,7 @@ module FrozenRecord
       end
 
       delegate :find, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!, :pluck, :ids, :order, :limit, :offset,
-               :minimum, :maximum, :average, :sum, to: :current_scope
+               :minimum, :maximum, :average, :sum, :count, to: :current_scope
 
       def file_path
         fail ArgumentError, "You must define `#{name}.base_path`" unless base_path
@@ -64,11 +66,25 @@ module FrozenRecord
         end
       end
 
-      def count
-        load_records.size
+      def load_records
+        @records = nil if auto_reloading && file_changed?
+        @records ||= begin
+          yml_erb_data = File.read(file_path)
+          yml_data = ERB.new(yml_erb_data).result
+
+          records = YAML.load(yml_data) || []
+          define_attributes!(list_attributes(records))
+          records.map(&method(:new)).freeze
+        end
       end
 
       private
+
+      def file_changed?
+        last_mtime = @file_mtime
+        @file_mtime = File.mtime(file_path)
+        last_mtime != @file_mtime
+      end
 
       def store
         @store ||= ThreadSafeStorage.new(name)
@@ -84,17 +100,6 @@ module FrozenRecord
       def dynamic_match(expression, values, bang)
         results = where(expression.split('_and_').zip(values))
         bang ? results.first! : results.first
-      end
-
-      def load_records
-        @records ||= begin
-          yml_erb_data = File.read(file_path)
-          yml_data = ERB.new(yml_erb_data).result
-
-          records = YAML.load(yml_data) || []
-          define_attributes!(list_attributes(records))
-          records.map(&method(:new)).freeze
-        end
       end
 
       def list_attributes(records)
