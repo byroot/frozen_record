@@ -145,12 +145,22 @@ describe 'querying' do
       expect(country).to be_nil
     end
 
+    it 'can be used on a scope' do
+      country = Country.republics.find_by_name_and_density('France', 116)
+      expect(country.name).to be == 'France'
+
+      country = Country.republics.find_by_name('Canada')
+      expect(country).to be_nil
+    end
+
     it 'hook into respond_to?' do
       expect(Country).to respond_to :find_by_name_and_density
+      expect(Country.republics).to respond_to :find_by_name_and_density
     end
 
     it 'do not respond to unknown attributes' do
       expect(Country).to_not respond_to :find_by_name_and_unknown_attribute
+      expect(Country.republics).to_not respond_to :find_by_name_and_unknown_attribute
     end
 
   end

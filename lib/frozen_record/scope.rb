@@ -118,8 +118,8 @@ module FrozenRecord
       spawn.offset!(amount)
     end
 
-    def respond_to_missing(method_name, *)
-      array_delegable?(method_name) || super
+    def respond_to_missing?(method_name, *)
+      array_delegable?(method_name) || @klass.respond_to?(method_name) || super
     end
 
     protected

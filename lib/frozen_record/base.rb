@@ -62,18 +62,23 @@ module FrozenRecord
 
       def respond_to_missing?(name, *)
         if name.to_s =~ FIND_BY_PATTERN
-          return true if $1.split('_and_').all? { |attr| public_method_defined?(attr) }
+          load_records # ensure attribute methods are defined
+          return true if $1.split('_and_').all? { |attr| instance_method_already_implemented?(attr) }
         end
       end
 
       def load_records
-        @records = nil if auto_reloading && file_changed?
+        if auto_reloading && file_changed?
+          @records = nil
+          undefine_attribute_methods
+        end
+
         @records ||= begin
           yml_erb_data = File.read(file_path)
           yml_data = ERB.new(yml_erb_data).result
 
           records = YAML.load(yml_data) || []
-          define_attributes!(list_attributes(records))
+          define_attribute_methods(list_attributes(records))
           records.map(&method(:new)).freeze
         end
       end
@@ -109,13 +114,7 @@ module FrozenRecord
             attributes.add(key.to_s)
           end
         end
-        attributes
-      end
-
-      def define_attributes!(attributes)
-        attributes.each do |attr|
-          define_attribute_method(attr)
-        end
+        attributes.to_a
       end
 
     end
