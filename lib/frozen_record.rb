@@ -9,4 +9,10 @@ require 'frozen_record/base'
 
 module FrozenRecord
   RecordNotFound = Class.new(StandardError)
+
+  class << self
+    def eager_load!
+      Base.descendants.each(&:eager_load!)
+    end
+  end
 end

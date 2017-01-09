@@ -1,7 +1,9 @@
 require 'set'
+require 'active_support/descendants_tracker'
 
 module FrozenRecord
   class Base
+    extend ActiveSupport::DescendantsTracker
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::AttributeMethods
@@ -42,6 +44,11 @@ module FrozenRecord
     end
 
     class << self
+      attr_accessor :abstract_class
+
+      def abstract_class?
+        defined?(@abstract_class) && @abstract_class
+      end
 
       def current_scope
         store[:scope] ||= Scope.new(self)
@@ -56,7 +63,7 @@ module FrozenRecord
                :minimum, :maximum, :average, :sum, :count, to: :current_scope
 
       def file_path
-        fail ArgumentError, "You must define `#{name}.base_path`" unless base_path
+        raise ArgumentError, "You must define `#{name}.base_path`" unless base_path
         File.join(base_path, "#{name.underscore.pluralize}.yml")
       end
 
@@ -65,6 +72,16 @@ module FrozenRecord
           load_records # ensure attribute methods are defined
           return true if $1.split('_and_').all? { |attr| instance_method_already_implemented?(attr) }
         end
+      end
+
+      def eager_load!
+        if auto_reloading
+          raise RuntimeError, "There is no point eager loading a FrozenRecord if auto_reloading is enabled!"
+        end
+
+        return if abstract_class?
+
+        load_records
       end
 
       def load_records
