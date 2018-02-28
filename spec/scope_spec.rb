@@ -243,13 +243,21 @@ describe 'querying' do
 
     context 'when passed a hash' do
 
-      it 'records records by given attribute and specified order' do
+      it 'reorder records by given attribute and specified order' do
         countries = Country.order(name: :desc).pluck(:name)
         expect(countries).to be == %w(France Canada Austria)
       end
 
     end
 
+    context 'when passed arguments that are not attributes' do
+
+      it 'reorder records by calling the given method name' do
+        countries = Country.order(:reverse_name).pluck(:reverse_name)
+        expect(countries).to be == %w(adanaC airtsuA ecnarF)
+      end
+
+    end
   end
 
   describe '.limit' do
