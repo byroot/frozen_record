@@ -349,7 +349,7 @@ describe 'querying' do
 
     it 'returns the sum of the column argument' do
       sum = Country.sum(:population)
-      expect(sum).to be == 108.04200000000002
+      expect(sum).to be_within(0.00000000000002).of(108.042)
     end
 
   end
