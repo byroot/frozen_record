@@ -161,8 +161,8 @@ module FrozenRecord
     def sort_records(records)
       return records if @order_values.empty?
 
-      records.sort do |a, b|
-        compare(a, b)
+      records.sort do |record_a, record_b|
+        compare(record_a, record_b)
       end
     end
 
@@ -174,9 +174,9 @@ module FrozenRecord
       records[first...last] || []
     end
 
-    def compare(a, b)
+    def compare(record_a, record_b)
       @order_values.each do |attr, order|
-        a_value, b_value = a[attr], b[attr]
+        a_value, b_value = record_a.send(attr), record_b.send(attr)
         cmp = a_value <=> b_value
         next if cmp == 0
         return order == :asc ? cmp : -cmp
