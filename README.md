@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/byroot/frozen_record/badge.svg)](https://coveralls.io/r/byroot/frozen_record)
 [![Gem Version](https://badge.fury.io/rb/frozen_record.svg)](http://badge.fury.io/rb/frozen_record)
 
-ActiveRecord-like interface for **read only** access to YAML static data.
+ActiveRecord-like interface for **read only** access to static data files.
 
 ## Installation
 
@@ -41,6 +41,34 @@ Or per model:
 ```ruby
 class Country < FrozenRecord::Base
   self.base_path = '/path/to/some/directory'
+end
+```
+
+You can also specify a custom backend. Backends are classes that know how to
+load records from a static file. By default FrozenRecord expects an YAML file,
+but this option can be changed per model:
+
+```ruby
+class Country < FrozenRecord::Base
+  self.backend = FrozenRecord::Backends::Yaml
+end
+```
+
+### Custom backends
+
+A valid backend must implement two class methods, `filename` and `load`.
+
+```ruby
+class MyCustomBackend
+  class << self
+    def filename(model_name)
+      # Returns the file name as a String
+    end
+
+    def load(file_path)
+      # Reads file and returns records as an Array of Hash objects
+    end
+  end
 end
 ```
 

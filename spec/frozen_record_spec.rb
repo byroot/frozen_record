@@ -55,9 +55,14 @@ describe FrozenRecord::Base do
 
   describe '#load_records' do
 
-    it 'processes erb' do
+    it 'processes erb by default' do
       country = Country.first
       expect(country.capital).to be == 'Ottawa'
+    end
+
+    it 'loads records with a custom backend' do
+      animal = Animal.first
+      expect(animal.name).to be == 'cat'
     end
 
   end

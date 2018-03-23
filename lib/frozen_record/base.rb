@@ -1,5 +1,6 @@
 require 'set'
 require 'active_support/descendants_tracker'
+require 'frozen_record/backends/yaml'
 
 module FrozenRecord
   class Base
@@ -20,6 +21,9 @@ module FrozenRecord
 
     class_attribute :primary_key
     self.primary_key = :id
+
+    class_attribute :backend
+    self.backend = FrozenRecord::Backends::Yaml
 
     class_attribute :auto_reloading
 
@@ -64,7 +68,7 @@ module FrozenRecord
 
       def file_path
         raise ArgumentError, "You must define `#{name}.base_path`" unless base_path
-        File.join(base_path, "#{name.underscore.pluralize}.yml")
+        File.join(base_path, backend.filename(name))
       end
 
       def respond_to_missing?(name, *)
@@ -91,10 +95,7 @@ module FrozenRecord
         end
 
         @records ||= begin
-          yml_erb_data = File.read(file_path)
-          yml_data = ERB.new(yml_erb_data).result
-
-          records = YAML.load(yml_data) || []
+          records = backend.load(file_path)
           define_attribute_methods(list_attributes(records))
           records.map(&method(:new)).freeze
         end
