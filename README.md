@@ -56,18 +56,18 @@ end
 
 ### Custom backends
 
-A valid backend must implement two class methods, `filename` and `load`.
+A custom backend must implement the methods `filename` and `load` as follows:
 
 ```ruby
-class MyCustomBackend
-  class << self
-    def filename(model_name)
-      # Returns the file name as a String
-    end
+module MyCustomBackend
+  extend  self
 
-    def load(file_path)
-      # Reads file and returns records as an Array of Hash objects
-    end
+  def filename(model_name)
+    # Returns the file name as a String
+  end
+
+  def load(file_path)
+    # Reads file and returns records as an Array of Hash objects
   end
 end
 ```
