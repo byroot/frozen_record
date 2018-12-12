@@ -79,11 +79,7 @@ module FrozenRecord
       end
 
       def eager_load!
-        if auto_reloading
-          raise RuntimeError, "There is no point eager loading a FrozenRecord if auto_reloading is enabled!"
-        end
-
-        return if abstract_class?
+        return if auto_reloading || abstract_class?
 
         load_records
       end
