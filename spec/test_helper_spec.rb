@@ -34,5 +34,11 @@ describe 'test fixture loading' do
 
       expect(Country.count).to be == 3
     end
+
+    it 'raises NoFixturesLoaded if load_fixture was never previously called' do
+      expect {
+        FrozenRecord::TestHelper.unload_fixtures
+      }.to raise_error(FrozenRecord::TestHelper::NoFixturesLoaded)
+    end
   end
 end

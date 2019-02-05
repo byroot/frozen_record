@@ -1,5 +1,7 @@
 module FrozenRecord
   module TestHelper
+    NoFixturesLoaded = Class.new(StandardError)
+
     def self.load_fixture(model_class, alternate_base_path)
       @cache ||= {}
 
@@ -15,6 +17,10 @@ module FrozenRecord
     end
 
     def self.unload_fixtures
+      if !defined?(@cache) || !@cache.present?
+        raise NoFixturesLoaded, "`unload_fixtures` was called before any calls to `load_fixture`"
+      end
+
       @cache.each do |model_class, cached_values|
         ensure_model_class_is_frozenrecord(model_class)
 
@@ -22,6 +28,8 @@ module FrozenRecord
         model_class.load_records
         model_class.auto_reloading = cached_values[:old_auto_reloading]
       end
+
+      @cache = nil
     end
 
     private
