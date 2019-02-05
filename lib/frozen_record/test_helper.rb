@@ -32,8 +32,6 @@ module FrozenRecord
       @cache = nil
     end
 
-    private
-
     def self.ensure_model_class_is_frozenrecord(model_class)
       return if model_class < FrozenRecord::Base
       raise ArgumentError, "Model class (#{model_class}) does not inherit from #{FrozenRecord::Base}"
