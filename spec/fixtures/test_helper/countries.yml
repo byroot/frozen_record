@@ -1,0 +1,9 @@
+---
+- id: 1
+  name: Some country
+  capital: <%= 'Somewhere' %>
+  density: 1.0
+  population: 42
+  founded_on: 2019-01-01
+  updated_at: 2019-01-01T19:08:06-05:00
+  king: Bob Smith

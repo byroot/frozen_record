@@ -11,6 +11,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 SimpleCov.start
 
 require 'frozen_record'
+require 'frozen_record/test_helper'
 
 FrozenRecord::Base.base_path = File.join(File.dirname(__FILE__), 'fixtures')
 
