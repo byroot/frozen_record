@@ -47,5 +47,11 @@ describe 'test fixture loading' do
 
       expect(Country.count).to be == 3
     end
+
+    it 'does has no effect if no alternate fixtures were loaded' do
+      FrozenRecord::TestHelper.unload_fixtures
+
+      expect(Country.count).to be == 3
+    end
   end
 end

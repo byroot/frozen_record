@@ -20,6 +20,8 @@ module FrozenRecord
       end
 
       def unload_fixtures
+        return unless @cache
+
         @cache.each do |model_class, cached_values|
           model_class.base_path = cached_values[:old_base_path]
           model_class.load_records
