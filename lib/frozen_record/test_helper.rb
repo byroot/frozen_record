@@ -6,26 +6,24 @@ module FrozenRecord
       def load_fixture(model_class, alternate_base_path)
         @cache ||= {}
 
-        ensure_model_class_is_frozenrecord(model_class)
+        unless model_class < FrozenRecord::Base
+          raise ArgumentError, "Model class (#{model_class}) does not inherit from #{FrozenRecord::Base}"
+        end
 
         return if @cache.key?(model_class)
 
-        @cache[model_class] = {
-          old_base_path: model_class.base_path,
-          old_auto_reloading: model_class.auto_reloading,
-        }
+        @cache[model_class] ||= model_class.base_path
 
-        model_class.auto_reloading = true
         model_class.base_path = alternate_base_path
+        model_class.load_records(force: true)
       end
 
       def unload_fixtures
-        return unless @cache
+        return unless defined?(@cache) && @cache
 
-        @cache.each do |model_class, cached_values|
-          model_class.base_path = cached_values[:old_base_path]
-          model_class.load_records
-          model_class.auto_reloading = cached_values[:old_auto_reloading]
+        @cache.each do |model_class, old_base_path|
+          model_class.base_path = old_base_path
+          model_class.load_records(force: true)
         end
 
         @cache = nil
@@ -34,8 +32,6 @@ module FrozenRecord
       private
 
       def ensure_model_class_is_frozenrecord(model_class)
-        return if model_class < FrozenRecord::Base
-        raise ArgumentError, "Model class (#{model_class}) does not inherit from #{FrozenRecord::Base}"
       end
     end
   end
