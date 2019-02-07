@@ -84,8 +84,8 @@ module FrozenRecord
         load_records
       end
 
-      def load_records
-        if auto_reloading && file_changed?
+      def load_records(force: false)
+        if force || (auto_reloading && file_changed?)
           @records = nil
           undefine_attribute_methods
         end
