@@ -151,6 +151,41 @@ FrozenRecord::Base.auto_reloading = true # Activate reloading for all models
 Country.auto_reloading # Activate reloading for `Country` only
 ```
 
+## Testing
+
+Testing your FrozenRecord-backed models with test fixtures is made easier with:
+
+```ruby
+require 'frozen_record/test_helper'
+
+# During test/spec setup
+test_fixtures_base_path = 'alternate/fixture/path'
+FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
+
+# During test/spec teardown
+FrozenRecord::TestHelper.unload_fixtures
+```
+
+Here's a Rails-specific example:
+
+```ruby
+require "test_helper"
+require 'frozen_record/test_helper'
+
+class CountryTest < ActiveSupport::TestCase
+  setup do
+    test_fixtures_base_path = Rails.root.join(%w(test support fixtures))
+    FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
+  end
+
+  teardown do
+    FrozenRecord::TestHelper.unload_fixtures
+  end
+  
+  test "countries have a valid name" do
+  # ...
+```
+
 ## Contributors
 
 FrozenRecord is a from scratch reimplementation of a [Shopify](https://github.com/Shopify) project from 2007 named `YamlRecord`.
