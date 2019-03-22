@@ -72,7 +72,7 @@ module FrozenRecord
       end
 
       def respond_to_missing?(name, *)
-        if name.to_s =~ FIND_BY_PATTERN
+        if name =~ FIND_BY_PATTERN
           load_records # ensure attribute methods are defined
           return true if $1.split('_and_').all? { |attr| instance_method_already_implemented?(attr) }
         end
@@ -93,7 +93,10 @@ module FrozenRecord
         @records ||= begin
           records = backend.load(file_path)
           define_attribute_methods(list_attributes(records))
-          records.map(&method(:new)).freeze
+          records.map do |attributes|
+            attributes.symbolize_keys!
+            new(attributes)
+          end.freeze
         end
       end
 
@@ -110,7 +113,7 @@ module FrozenRecord
       end
 
       def method_missing(name, *args)
-        if name.to_s =~ FIND_BY_PATTERN
+        if name =~ FIND_BY_PATTERN
           return dynamic_match($1, args, $2.present?)
         end
         super
@@ -125,7 +128,7 @@ module FrozenRecord
         attributes = Set.new
         records.each do |record|
           record.keys.each do |key|
-            attributes.add(key.to_s)
+            attributes.add(key.to_sym)
           end
         end
         attributes.to_a
@@ -133,10 +136,13 @@ module FrozenRecord
 
     end
 
-    attr_reader :attributes
-
     def initialize(attrs = {})
-      @attributes = attrs.stringify_keys
+      @attributes = attrs
+    end
+
+    def attributes
+      # We have to return a hash with string keys for backward compatibity reasons
+      @attributes.stringify_keys
     end
 
     def id
@@ -144,7 +150,7 @@ module FrozenRecord
     end
 
     def [](attr)
-      @attributes[attr.to_s]
+      @attributes[attr.to_sym]
     end
     alias_method :attribute, :[]
 
@@ -163,7 +169,8 @@ module FrozenRecord
     private
 
     def attribute?(attribute_name)
-      FALSY_VALUES.exclude?(self[attribute_name]) && self[attribute_name].present?
+      value = self[attribute_name]
+      FALSY_VALUES.exclude?(value) && value.present?
     end
 
   end
