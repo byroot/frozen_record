@@ -15,19 +15,28 @@ module FrozenRecord
     end
 
     FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
-    FALSY_VALUES = [false, nil, 0, ''].to_set
+    FALSY_VALUES = [false, nil, 0, -''].to_set
 
     class_attribute :base_path
 
     class_attribute :primary_key
-    self.primary_key = :id
+
+    class << self
+      alias_method :original_primary_key=, :primary_key=
+
+      def primary_key=(primary_key)
+        self.original_primary_key = -primary_key.to_s
+      end
+    end
+
+    self.primary_key = 'id'
 
     class_attribute :backend
     self.backend = FrozenRecord::Backends::Yaml
 
     class_attribute :auto_reloading
 
-    attribute_method_suffix '?'
+    attribute_method_suffix -'?'
 
     class ThreadSafeStorage
 
@@ -117,7 +126,7 @@ module FrozenRecord
       end
 
       def dynamic_match(expression, values, bang)
-        results = where(expression.split('_and_').zip(values))
+        results = where(expression.split('_and_'.freeze).zip(values))
         bang ? results.first! : results.first
       end
 
@@ -133,14 +142,16 @@ module FrozenRecord
 
     end
 
-    attr_reader :attributes
-
     def initialize(attrs = {})
-      @attributes = attrs.stringify_keys
+      @attributes = attrs.stringify_keys.freeze
+    end
+
+    def attributes
+      @attributes.dup
     end
 
     def id
-      self[primary_key]
+      self[primary_key.to_s]
     end
 
     def [](attr)

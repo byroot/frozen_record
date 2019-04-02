@@ -62,7 +62,7 @@ module FrozenRecord
     def pluck(*attributes)
       case attributes.length
       when 1
-        to_a.map(&attributes.first)
+        to_a.map(&attributes.first.to_sym)
       when 0
         raise NotImplementedError, '`.pluck` without arguments is not supported yet'
       else

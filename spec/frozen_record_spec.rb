@@ -13,6 +13,24 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '.primary_key' do
+
+    around do |example|
+      previous_primary_key = Country.primary_key
+      begin
+        example.run
+      ensure
+        Country.primary_key = previous_primary_key
+      end
+    end
+
+    it 'is coerced to string' do
+      Country.primary_key = :foobar
+      expect(Country.primary_key).to be == 'foobar'
+    end
+
+  end
+
   describe '.auto_reloading' do
 
     context 'when enabled' do
