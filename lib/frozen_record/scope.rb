@@ -122,6 +122,15 @@ module FrozenRecord
       array_delegable?(method_name) || @klass.respond_to?(method_name) || super
     end
 
+    def hash
+      to_hashable_string.hash
+    end
+
+    def ==(other)
+      self.class === other &&
+       to_hashable_string == other.to_hashable_string
+    end
+
     protected
 
     def scoping
@@ -229,7 +238,13 @@ module FrozenRecord
       self
     end
 
+    def to_hashable_string
+      "#{@klass} -- WHERE: #{@where_values.uniq.sort}, NOT: #{@where_not_values.uniq.sort}, ORDER_BY: #{@order_values.uniq},
+       LIMIT: #{@limit}, OFFSET: #{@offset}"
+    end
+
     private
+
     def compare_value(actual, requested)
       return actual == requested unless requested.is_a?(Array) || requested.is_a?(Range)
       requested.include?(actual)

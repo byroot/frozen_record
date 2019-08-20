@@ -417,6 +417,23 @@ describe 'querying' do
 
   end
 
+  describe '#==' do
+    it 'returns true when two scopes share the same hashed attributes' do
+      scope_a = Country.republics.nato
+      scope_b = Country.republics.nato
+      expect(scope_a.object_id).not_to be == scope_b.object_id
+      expect(scope_a).to be == scope_b
+    end
+
+    it 'returns true when the same scope has be rechained' do
+      scope_a = Country.nato.republics.nato.republics
+      scope_b = Country.republics.nato
+      expect(scope_a.instance_variable_get(:@where_values)).to be == [[:nato, true ], [:king, nil ], [:nato, true], [:king, nil]]
+      expect(scope_b.instance_variable_get(:@where_values)).to be == [[:king, nil ], [:nato, true]]
+      expect(scope_a).to be == scope_b
+    end
+  end
+
   describe 'class methods delegation' do
 
     it 'can be called from a scope' do
