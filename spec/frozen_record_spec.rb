@@ -71,6 +71,15 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '.scope' do
+    it 'defines a scope method' do
+
+      Country.scope :north_american, -> { Country.where(continent: 'North America') }
+      expect(Country).to respond_to(:north_american)
+      expect(Country.north_american.first.name).to be == 'Canada'
+    end
+  end
+
   describe '#load_records' do
 
     it 'processes erb by default' do
@@ -124,6 +133,7 @@ describe FrozenRecord::Base do
         'updated_at' => Time.parse('2014-02-24T19:08:06-05:00'),
         'king' => 'Elisabeth II',
         'nato' => true,
+        'continent' => 'North America',
       }
     end
 

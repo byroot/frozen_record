@@ -106,6 +106,13 @@ module FrozenRecord
         end
       end
 
+      def scope(name, body)
+        unless body.respond_to?(:call)
+          raise ArgumentError, "The scope body needs to be callable."
+        end
+        singleton_class.send(:define_method, name) { |*args| body.call(*args) }
+      end
+
       private
 
       def file_changed?

@@ -8,6 +8,7 @@
   updated_at: 2014-02-24T19:08:06-05:00
   nato: true
   king: Elisabeth II
+  continent: North America
 
 - id: 2
   name: France
@@ -16,6 +17,7 @@
   population: 65.7
   founded_on: 486-01-01
   updated_at: 2014-02-12T19:02:03-02:00
+  continent: Europe
 
 - id: 3
   name: Austria
@@ -24,3 +26,4 @@
   population: 8.462
   founded_on: 1156-01-01
   updated_at: 2014-02-12T19:02:03-02:00
+  continent: Europe

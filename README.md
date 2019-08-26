@@ -95,10 +95,12 @@ Country.
 
 ### Scopes
 
-While the `scope :symbol, lambda` syntax is not supported, the class methods way is:
+Basic `scope :symbol, lambda` syntax is now supported in addition to class method syntax.
 
 ```ruby
 class Country
+  scope :european, -> { where(continent: 'Europe' ) }
+
   def self.republics
     where(king: nil)
   end
@@ -108,7 +110,7 @@ class Country
   end
 end
 
-Country.republics.part_of_nato.order(id: :desc)
+Country.european.republics.part_of_nato.order(id: :desc)
 ```
 
 ### Supported query methods
@@ -181,7 +183,7 @@ class CountryTest < ActiveSupport::TestCase
   teardown do
     FrozenRecord::TestHelper.unload_fixtures
   end
-  
+
   test "countries have a valid name" do
   # ...
 ```
