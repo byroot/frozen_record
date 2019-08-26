@@ -123,15 +123,26 @@ module FrozenRecord
     end
 
     def hash
-      to_hashable_string.hash
+      comparable_attributes.hash
     end
 
     def ==(other)
       self.class === other &&
-       to_hashable_string == other.to_hashable_string
+      comparable_attributes == other.comparable_attributes
     end
 
     protected
+
+    def comparable_attributes
+      @comparable_attributes ||= {
+        klass: @klass,
+        where_values: @where_values.uniq.sort,
+        where_not_values: @where_not_values.uniq.sort,
+        order_values: @order_values.uniq,
+        limit: @limit,
+        offset: @offset,
+      }
+    end
 
     def scoping
       previous, @klass.current_scope = @klass.current_scope, self
@@ -145,6 +156,7 @@ module FrozenRecord
     end
 
     def clear_cache!
+      @comparable_attributes = nil
       @results = nil
       @matches = nil
       self
@@ -236,11 +248,6 @@ module FrozenRecord
     def offset!(amount)
       @offset = amount
       self
-    end
-
-    def to_hashable_string
-      "#{@klass} -- WHERE: #{@where_values.uniq.sort}, NOT: #{@where_not_values.uniq.sort}, ORDER_BY: #{@order_values.uniq},
-       LIMIT: #{@limit}, OFFSET: #{@offset}"
     end
 
     private
