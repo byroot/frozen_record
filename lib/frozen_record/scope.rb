@@ -122,7 +122,27 @@ module FrozenRecord
       array_delegable?(method_name) || @klass.respond_to?(method_name) || super
     end
 
+    def hash
+      comparable_attributes.hash
+    end
+
+    def ==(other)
+      self.class === other &&
+      comparable_attributes == other.comparable_attributes
+    end
+
     protected
+
+    def comparable_attributes
+      @comparable_attributes ||= {
+        klass: @klass,
+        where_values: @where_values.uniq.sort,
+        where_not_values: @where_not_values.uniq.sort,
+        order_values: @order_values.uniq,
+        limit: @limit,
+        offset: @offset,
+      }
+    end
 
     def scoping
       previous, @klass.current_scope = @klass.current_scope, self
@@ -136,6 +156,7 @@ module FrozenRecord
     end
 
     def clear_cache!
+      @comparable_attributes = nil
       @results = nil
       @matches = nil
       self
@@ -230,6 +251,7 @@ module FrozenRecord
     end
 
     private
+
     def compare_value(actual, requested)
       return actual == requested unless requested.is_a?(Array) || requested.is_a?(Range)
       requested.include?(actual)

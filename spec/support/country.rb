@@ -4,6 +4,10 @@ class Country < FrozenRecord::Base
     where(king: nil)
   end
 
+  def self.nato
+    where(nato: true)
+  end
+
   def reverse_name
     name.reverse
   end
