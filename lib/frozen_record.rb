@@ -16,3 +16,5 @@ module FrozenRecord
     end
   end
 end
+
+require 'frozen_record/railtie' if defined?(Rails)
