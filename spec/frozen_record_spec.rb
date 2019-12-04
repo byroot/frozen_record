@@ -179,6 +179,14 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '#present?' do
+
+    it 'returns true' do
+      expect(Country.first).to be_present
+    end
+
+  end
+
   describe '#count' do
 
     it 'can count objects with no records' do

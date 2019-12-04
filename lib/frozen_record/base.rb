@@ -58,6 +58,7 @@ module FrozenRecord
 
     class << self
       attr_accessor :abstract_class
+      attr_reader :attributes
 
       def abstract_class?
         defined?(@abstract_class) && @abstract_class
@@ -101,7 +102,8 @@ module FrozenRecord
 
         @records ||= begin
           records = backend.load(file_path)
-          define_attribute_methods(list_attributes(records))
+          @attributes = list_attributes(records).freeze
+          define_attribute_methods(@attributes.to_a)
           records.map(&method(:new)).freeze
         end
       end
@@ -140,11 +142,9 @@ module FrozenRecord
       def list_attributes(records)
         attributes = Set.new
         records.each do |record|
-          record.keys.each do |key|
-            attributes.add(key.to_s)
-          end
+          attributes.merge(record.keys)
         end
-        attributes.to_a
+        attributes
       end
 
     end
@@ -184,5 +184,8 @@ module FrozenRecord
       FALSY_VALUES.exclude?(self[attribute_name]) && self[attribute_name].present?
     end
 
+    def attribute_method?(attribute_name)
+      respond_to_without_attributes?(:attributes) && self.class.attributes.include?(attribute_name)
+    end
   end
 end
