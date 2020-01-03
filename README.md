@@ -50,7 +50,7 @@ but this option can be changed per model:
 
 ```ruby
 class Country < FrozenRecord::Base
-  self.backend = FrozenRecord::Backends::Yaml
+  self.backend = FrozenRecord::Backends::Json
 end
 ```
 

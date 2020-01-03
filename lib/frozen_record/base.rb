@@ -1,5 +1,6 @@
 require 'set'
 require 'active_support/descendants_tracker'
+require 'frozen_record/backends/json'
 require 'frozen_record/backends/yaml'
 
 module FrozenRecord
