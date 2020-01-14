@@ -11,7 +11,7 @@ module FrozenRecord
 
       def load(file_path)
         json_data = File.read(file_path)
-        JSON.parse(json_data, symbolize_names: true) || []
+        JSON.parse(json_data) || []
       end
     end
   end
