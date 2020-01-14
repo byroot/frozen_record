@@ -101,7 +101,7 @@ module FrozenRecord
         end
 
         @records ||= begin
-          records = backend.load(file_path)
+          records = Deduplication.deep_deduplicate!(backend.load(file_path))
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
           records.map(&method(:new)).freeze

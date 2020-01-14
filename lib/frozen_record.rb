@@ -6,6 +6,7 @@ require 'active_model'
 require 'frozen_record/version'
 require 'frozen_record/scope'
 require 'frozen_record/base'
+require 'frozen_record/deduplication'
 
 module FrozenRecord
   RecordNotFound = Class.new(StandardError)
