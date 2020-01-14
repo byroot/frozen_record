@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FrozenRecord
   class Railtie < Rails::Railtie
     initializer "frozen_record.setup" do |app|

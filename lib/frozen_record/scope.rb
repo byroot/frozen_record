@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FrozenRecord
   class Scope
     BLACKLISTED_ARRAY_METHODS = [

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FrozenRecord
   module TestHelper
     NoFixturesLoaded = Class.new(StandardError)

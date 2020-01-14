@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'set'
 require 'active_support/descendants_tracker'
 require 'frozen_record/backends'
