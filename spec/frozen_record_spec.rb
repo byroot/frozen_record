@@ -85,6 +85,9 @@ describe FrozenRecord::Base do
       expect(Country.find_by(name: 'Austria').available).to be == false
     end
 
+    it 'is also set in the initializer' do
+      expect(Country.new.contemporary).to be == true
+    end
   end
 
   describe '.scope' do

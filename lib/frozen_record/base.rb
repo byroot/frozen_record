@@ -123,11 +123,11 @@ module FrozenRecord
 
         @records ||= begin
           records = backend.load(file_path)
-          records = transform_records!(records)
+          records.each { |r| assign_defaults!(r) }
           records = Deduplication.deep_deduplicate!(records)
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
-          records.map(&method(:new)).freeze
+          records.map { |r| load(r) }.freeze
         end
       end
 
@@ -138,20 +138,14 @@ module FrozenRecord
         singleton_class.send(:define_method, name) { |*args| body.call(*args) }
       end
 
-      private
+      alias_method :load, :new
+      private :load
 
-      def transform_records!(records)
-        if default_attributes
-          records.each do |record|
-            default_attributes.each do |key, value|
-              unless record.key?(key)
-                record[key] = value
-              end
-            end
-          end
-        end
-        records
+      def new(attrs = {})
+        load(assign_defaults!(attrs.stringify_keys))
       end
+
+      private
 
       def file_changed?
         last_mtime = @file_mtime
@@ -161,6 +155,18 @@ module FrozenRecord
 
       def store
         @store ||= ThreadSafeStorage.new(name)
+      end
+
+      def assign_defaults!(record)
+        if default_attributes
+          default_attributes.each do |key, value|
+            unless record.key?(key)
+              record[key] = value
+            end
+          end
+        end
+
+        record
       end
 
       def method_missing(name, *args)
@@ -186,7 +192,7 @@ module FrozenRecord
     end
 
     def initialize(attrs = {})
-      @attributes = attrs.stringify_keys.freeze
+      @attributes = attrs.freeze
     end
 
     def attributes
