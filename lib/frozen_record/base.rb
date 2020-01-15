@@ -200,7 +200,7 @@ module FrozenRecord
     end
 
     def id
-      self[primary_key.to_s]
+      self[self.class.primary_key]
     end
 
     def [](attr)
