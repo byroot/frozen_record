@@ -118,7 +118,9 @@ module FrozenRecord
         end
 
         @records ||= begin
-          records = Deduplication.deep_deduplicate!(backend.load(file_path))
+          records = backend.load(file_path)
+          records = transform_records!(records)
+          records = Deduplication.deep_deduplicate!(records)
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
           records.map(&method(:new)).freeze
@@ -133,6 +135,10 @@ module FrozenRecord
       end
 
       private
+
+      def transform_records!(records)
+        records
+      end
 
       def file_changed?
         last_mtime = @file_mtime
