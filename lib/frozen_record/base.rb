@@ -19,9 +19,7 @@ module FrozenRecord
     FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
     FALSY_VALUES = [false, nil, 0, -''].to_set
 
-    class_attribute :base_path
-
-    class_attribute :primary_key
+    class_attribute :base_path, :primary_key, :backend, :auto_reloading, instance_accessor: false
 
     class << self
       alias_method :original_primary_key=, :primary_key=
@@ -33,10 +31,7 @@ module FrozenRecord
 
     self.primary_key = 'id'
 
-    class_attribute :backend
     self.backend = FrozenRecord::Backends::Yaml
-
-    class_attribute :auto_reloading
 
     attribute_method_suffix -'?'
 
