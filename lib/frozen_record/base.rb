@@ -21,14 +21,6 @@ module FrozenRecord
 
     class_attribute :base_path, :primary_key, :backend, :auto_reloading, instance_accessor: false
 
-    class << self
-      alias_method :original_primary_key=, :primary_key=
-
-      def primary_key=(primary_key)
-        self.original_primary_key = -primary_key.to_s
-      end
-    end
-
     self.primary_key = 'id'
 
     self.backend = FrozenRecord::Backends::Yaml
@@ -73,9 +65,14 @@ module FrozenRecord
       delegate :find, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!, :pluck, :ids, :order, :limit, :offset,
                :minimum, :maximum, :average, :sum, :count, to: :current_scope
 
+     alias_method :set_primary_key, :primary_key=
+     private :set_primary_key
+     def primary_key=(primary_key)
+       set_primary_key(-primary_key.to_s)
+     end
+
       alias_method :set_base_path, :base_path=
       private :set_base_path
-
       def base_path=(base_path)
         @file_path = nil
         set_base_path(base_path)
