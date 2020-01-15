@@ -66,7 +66,13 @@ module FrozenRecord
       end
 
       attr_accessor :abstract_class
-      attr_reader :attributes
+
+      def attributes
+        @attributes ||= begin
+          load_records
+          @attributes
+        end
+      end
 
       def abstract_class?
         defined?(@abstract_class) && @abstract_class
