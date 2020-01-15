@@ -71,6 +71,22 @@ describe FrozenRecord::Base do
 
   end
 
+  describe '.default_attributes' do
+
+    it 'define the attribute' do
+      expect(Country.new).to respond_to :contemporary
+    end
+
+    it 'sets the value as default' do
+      expect(Country.find_by(name: 'Austria').contemporary).to be == true
+    end
+
+    it 'gives precedence to the data file' do
+      expect(Country.find_by(name: 'Austria').available).to be == false
+    end
+
+  end
+
   describe '.scope' do
     it 'defines a scope method' do
 
@@ -134,6 +150,8 @@ describe FrozenRecord::Base do
         'king' => 'Elisabeth II',
         'nato' => true,
         'continent' => 'North America',
+        'available' => true,
+        'contemporary' => true,
       }
     end
 

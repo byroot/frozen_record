@@ -1,4 +1,5 @@
 class Country < FrozenRecord::Base
+  self.default_attributes = { contemporary: true, available: true }
 
   def self.republics
     where(king: nil)

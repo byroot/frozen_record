@@ -19,7 +19,7 @@ module FrozenRecord
     FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
     FALSY_VALUES = [false, nil, 0, -''].to_set
 
-    class_attribute :base_path, :primary_key, :backend, :auto_reloading, instance_accessor: false
+    class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
 
     self.primary_key = 'id'
 
@@ -46,6 +46,25 @@ module FrozenRecord
     end
 
     class << self
+      alias_method :set_default_attributes, :default_attributes=
+      private :set_default_attributes
+      def default_attributes=(default_attributes)
+        set_default_attributes(Deduplication.deep_deduplicate!(default_attributes.stringify_keys))
+      end
+
+      alias_method :set_primary_key, :primary_key=
+      private :set_primary_key
+      def primary_key=(primary_key)
+        set_primary_key(-primary_key.to_s)
+      end
+
+      alias_method :set_base_path, :base_path=
+      private :set_base_path
+      def base_path=(base_path)
+       @file_path = nil
+       set_base_path(base_path)
+      end
+
       attr_accessor :abstract_class
       attr_reader :attributes
 
@@ -64,19 +83,6 @@ module FrozenRecord
 
       delegate :find, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!, :pluck, :ids, :order, :limit, :offset,
                :minimum, :maximum, :average, :sum, :count, to: :current_scope
-
-     alias_method :set_primary_key, :primary_key=
-     private :set_primary_key
-     def primary_key=(primary_key)
-       set_primary_key(-primary_key.to_s)
-     end
-
-      alias_method :set_base_path, :base_path=
-      private :set_base_path
-      def base_path=(base_path)
-        @file_path = nil
-        set_base_path(base_path)
-      end
 
       def file_path
         raise ArgumentError, "You must define `#{name}.base_path`" unless base_path
@@ -129,6 +135,15 @@ module FrozenRecord
       private
 
       def transform_records!(records)
+        if default_attributes
+          records.each do |record|
+            default_attributes.each do |key, value|
+              unless record.key?(key)
+                record[key] = value
+              end
+            end
+          end
+        end
         records
       end
 
