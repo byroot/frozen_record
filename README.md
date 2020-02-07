@@ -60,7 +60,7 @@ A custom backend must implement the methods `filename` and `load` as follows:
 
 ```ruby
 module MyCustomBackend
-  extend  self
+  extend self
 
   def filename(model_name)
     # Returns the file name as a String
