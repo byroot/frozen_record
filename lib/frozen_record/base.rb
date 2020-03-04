@@ -3,6 +3,7 @@
 require 'set'
 require 'active_support/descendants_tracker'
 require 'frozen_record/backends'
+require 'objspace'
 
 module FrozenRecord
   class Base
@@ -100,6 +101,21 @@ module FrozenRecord
             file_path
           end
         end
+      end
+
+      def memsize(object = self, seen = Set.new.compare_by_identity)
+        return 0 unless seen.add?(object)
+
+        size = ObjectSpace.memsize_of(object)
+        object.instance_variables.each { |v| size += memsize(object.instance_variable_get(v), seen) }
+
+        case object
+        when Hash
+          object.each { |k, v| size += memsize(k, seen) + memsize(v, seen) }
+        when Array
+          object.each { |i| size += memsize(i, seen) }
+        end
+        size
       end
 
       def respond_to_missing?(name, *)

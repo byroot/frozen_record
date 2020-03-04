@@ -88,15 +88,27 @@ describe FrozenRecord::Base do
     it 'is also set in the initializer' do
       expect(Country.new.contemporary).to be == true
     end
+
   end
 
   describe '.scope' do
-    it 'defines a scope method' do
 
+    it 'defines a scope method' do
       Country.scope :north_american, -> { Country.where(continent: 'North America') }
       expect(Country).to respond_to(:north_american)
       expect(Country.north_american.first.name).to be == 'Canada'
     end
+
+  end
+
+  describe '.memsize' do
+
+    it 'retuns the records memory footprint' do
+      # Memory footprint is very dependent on the Ruby implementation and version
+      expect(Country.memsize).to be > 0
+      expect(Car.memsize).to be > 0
+    end
+
   end
 
   describe '#load_records' do
