@@ -118,11 +118,15 @@ describe FrozenRecord::Base do
       expect(country.capital).to be == 'Ottawa'
     end
 
-    it 'loads records with a custom backend' do
+    it 'loads records with a custom backend json' do
       animal = Animal.first
       expect(animal.name).to be == 'cat'
     end
 
+    it 'loads records with a custom backend csv' do
+      employee = Employee.first
+      expect(employee.name).to be == 'john doe'
+    end
   end
 
   describe '#==' do
