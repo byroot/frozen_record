@@ -215,6 +215,17 @@ describe 'querying' do
       countries = Country.where(name: ['France', 'Canada'])
       expect(countries.length).to be == 2
     end
+
+    it 'can be used when attributes are arrays' do
+      countries = Country.where(official_languages: 'French')
+      expect(countries.length).to be == 2
+    end
+
+    it 'can be used when attributes are arrays and search is an array' do
+      countries = Country.where(official_languages: ['French', 'German'])
+      expect(countries.length).to be == 3
+    end
+
   end
 
   describe '.where.not' do

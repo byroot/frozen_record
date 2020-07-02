@@ -266,8 +266,18 @@ module FrozenRecord
     private
 
     def compare_value(actual, requested)
+      return compare_array(actual, requested) if actual.is_a?(Array)
+      compare_string(actual, requested)
+    end
+
+    def compare_string(actual, requested)
       return actual == requested unless requested.is_a?(Array) || requested.is_a?(Range)
       requested.include?(actual)
+    end
+
+    def compare_array(actual, requested)
+      return actual.include?(requested) unless requested.is_a?(Array) || requested.is_a?(Range)
+      requested.any? { |item| actual.include?(item) }
     end
   end
 end
