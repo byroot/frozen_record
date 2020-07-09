@@ -140,7 +140,6 @@ module FrozenRecord
         @records ||= begin
           records = backend.load(file_path)
           records.each { |r| assign_defaults!(r) }
-          records = Deduplication.deep_deduplicate!(records)
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
           records.map { |r| load(r) }.freeze
@@ -202,17 +201,28 @@ module FrozenRecord
         records.each do |record|
           attributes.merge(record.keys)
         end
-        attributes
+        attributes.map(&:-@).to_set
       end
 
+      if ActiveModel.gem_version >= Gem::Version.new('6.1.0.alpha')
+        def define_method_attribute(attr, owner:)
+          owner << "attr_reader #{attr.inspect}"
+        end
+      else
+        def define_method_attribute(attr)
+          generated_attribute_methods.attr_reader(attr)
+        end
+      end
     end
 
     def initialize(attrs = {})
-      @attributes = attrs.freeze
+      self.attributes = attrs
     end
 
     def attributes
-      @attributes.dup
+      self.class.attributes.each_with_object({}) do |attr, hash|
+        hash[attr] = instance_variable_get("@#{attr}")
+      end
     end
 
     def id
@@ -220,9 +230,8 @@ module FrozenRecord
     end
 
     def [](attr)
-      @attributes[attr.to_s]
+      send(attr) if self.class.attributes.include?(attr.to_s)
     end
-    alias_method :attribute, :[]
 
     def ==(other)
       super || other.is_a?(self.class) && other.id == id
@@ -238,8 +247,15 @@ module FrozenRecord
 
     private
 
+    def attributes=(attributes)
+      self.class.attributes.each do |attr|
+        instance_variable_set("@#{attr}", Deduplication.deep_deduplicate!(attributes[attr]))
+      end
+    end
+
     def attribute?(attribute_name)
-      FALSY_VALUES.exclude?(self[attribute_name]) && self[attribute_name].present?
+      val = self[attribute_name]
+      FALSY_VALUES.exclude?(val) && val.present?
     end
 
     def attribute_method?(attribute_name)
