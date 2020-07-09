@@ -13,3 +13,12 @@ class Country < FrozenRecord::Base
     name.reverse
   end
 end
+
+module Compact
+  class Country < ::Country
+    include FrozenRecord::Compact
+    def self.file_path
+      superclass.file_path
+    end
+  end
+end

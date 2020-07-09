@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'setup'
+
+regular = Country.first
+compact = Compact::Country.first
+
+
+puts "=== record.attribute ==="
+Benchmark.ips do |x|
+  x.report('regular') { regular.name }
+  x.report('compact') { compact.name }
+  x.compare!
+end
+
+puts "=== record[:attribute] ==="
+Benchmark.ips do |x|
+  x.report('regular') { regular[:name] }
+  x.report('compact') { compact[:name] }
+  x.compare!
+end

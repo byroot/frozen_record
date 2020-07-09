@@ -1,32 +1,21 @@
 require 'spec_helper'
 
-describe FrozenRecord::Base do
-
-  describe '.base_path' do
-
-    it 'raise a RuntimeError on first query attempt if not set' do
-      allow(Country).to receive_message_chain(:base_path).and_return(nil)
-      expect {
-        Country.file_path
-      }.to raise_error(ArgumentError)
-    end
-
-  end
+RSpec.shared_examples 'main' do
 
   describe '.primary_key' do
 
     around do |example|
-      previous_primary_key = Country.primary_key
+      previous_primary_key = country_model.primary_key
       begin
         example.run
       ensure
-        Country.primary_key = previous_primary_key
+        country_model.primary_key = previous_primary_key
       end
     end
 
     it 'is coerced to string' do
-      Country.primary_key = :foobar
-      expect(Country.primary_key).to be == 'foobar'
+      country_model.primary_key = :foobar
+      expect(country_model.primary_key).to be == 'foobar'
     end
 
   end
@@ -36,24 +25,24 @@ describe FrozenRecord::Base do
     context 'when enabled' do
 
       around do |example|
-        previous_auto_reloading = Country.auto_reloading
-        Country.auto_reloading = true
+        previous_auto_reloading = country_model.auto_reloading
+        country_model.auto_reloading = true
         begin
           example.run
         ensure
-          Country.auto_reloading = previous_auto_reloading
+          country_model.auto_reloading = previous_auto_reloading
         end
       end
 
       it 'reloads the records if the file mtime changed' do
-        mtime = File.mtime(Country.file_path)
+        mtime = File.mtime(country_model.file_path)
         expect {
-          File.utime(mtime + 1, mtime + 1, Country.file_path)
-        }.to change { Country.first.object_id }
+          File.utime(mtime + 1, mtime + 1, country_model.file_path)
+        }.to change { country_model.first.object_id }
       end
 
       it 'does not reload if the file has not changed' do
-        expect(Country.first.object_id).to be == Country.first.object_id
+        expect(country_model.first.object_id).to be == country_model.first.object_id
       end
 
     end
@@ -61,10 +50,10 @@ describe FrozenRecord::Base do
     context 'when disabled' do
 
       it 'does not reloads the records if the file mtime changed' do
-        mtime = File.mtime(Country.file_path)
+        mtime = File.mtime(country_model.file_path)
         expect {
-          File.utime(mtime + 1, mtime + 1, Country.file_path)
-        }.to_not change { Country.first.object_id }
+          File.utime(mtime + 1, mtime + 1, country_model.file_path)
+        }.to_not change { country_model.first.object_id }
       end
 
     end
@@ -74,19 +63,19 @@ describe FrozenRecord::Base do
   describe '.default_attributes' do
 
     it 'define the attribute' do
-      expect(Country.new).to respond_to :contemporary
+      expect(country_model.new).to respond_to :contemporary
     end
 
     it 'sets the value as default' do
-      expect(Country.find_by(name: 'Austria').contemporary).to be == true
+      expect(country_model.find_by(name: 'Austria').contemporary).to be == true
     end
 
     it 'gives precedence to the data file' do
-      expect(Country.find_by(name: 'Austria').available).to be == false
+      expect(country_model.find_by(name: 'Austria').available).to be == false
     end
 
     it 'is also set in the initializer' do
-      expect(Country.new.contemporary).to be == true
+      expect(country_model.new.contemporary).to be == true
     end
 
   end
@@ -94,9 +83,9 @@ describe FrozenRecord::Base do
   describe '.scope' do
 
     it 'defines a scope method' do
-      Country.scope :north_american, -> { Country.where(continent: 'North America') }
-      expect(Country).to respond_to(:north_american)
-      expect(Country.north_american.first.name).to be == 'Canada'
+      country_model.scope :north_american, -> { country_model.where(continent: 'North America') }
+      expect(country_model).to respond_to(:north_american)
+      expect(country_model.north_american.first.name).to be == 'Canada'
     end
 
   end
@@ -105,8 +94,8 @@ describe FrozenRecord::Base do
 
     it 'retuns the records memory footprint' do
       # Memory footprint is very dependent on the Ruby implementation and version
-      expect(Country.memsize).to be > 0
-      expect(Car.memsize).to be > 0
+      expect(country_model.memsize).to be > 0
+      expect(car_model.memsize).to be > 0
     end
 
   end
@@ -114,12 +103,12 @@ describe FrozenRecord::Base do
   describe '#load_records' do
 
     it 'processes erb by default' do
-      country = Country.first
+      country = country_model.first
       expect(country.capital).to be == 'Ottawa'
     end
 
     it 'loads records with a custom backend' do
-      animal = Animal.first
+      animal = animal_model.first
       expect(animal.name).to be == 'cat'
     end
 
@@ -128,22 +117,22 @@ describe FrozenRecord::Base do
   describe '#==' do
 
     it 'returns true if both instances are from the same class and have the same id' do
-      country = Country.first
+      country = country_model.first
       second_country = country.dup
 
       expect(country).to be == second_country
     end
 
     it 'returns false if both instances are not from the same class' do
-      country = Country.first
-      car = Car.new(id: country.id)
+      country = country_model.first
+      car = car_model.new(id: country.id)
 
       expect(country).to_not be == car
     end
 
     it 'returns false if both instances do not have the same id' do
-      country = Country.first
-      second_country = Country.last
+      country = country_model.first
+      second_country = country_model.last
 
       expect(country).to_not be == second_country
     end
@@ -153,7 +142,7 @@ describe FrozenRecord::Base do
   describe '#attributes' do
 
     it 'returns a Hash of the record attributes' do
-      attributes = Country.first.attributes
+      attributes = country_model.first.attributes
       expect(attributes).to be == {
         'id' => 1,
         'name' => 'Canada',
@@ -174,9 +163,9 @@ describe FrozenRecord::Base do
 
   describe '`attribute`?' do
 
-    let(:blank) { Country.new(id: 0, name: '', nato: false, king: nil) }
+    let(:blank) { country_model.new(id: 0, name: '', nato: false, king: nil) }
 
-    let(:present) { Country.new(id: 42, name: 'Groland', nato: true, king: Object.new) }
+    let(:present) { country_model.new(id: 42, name: 'Groland', nato: true, king: Object.new) }
 
     it 'considers `0` as missing' do
       expect(blank.id?).to be false
@@ -215,7 +204,7 @@ describe FrozenRecord::Base do
   describe '#present?' do
 
     it 'returns true' do
-      expect(Country.first).to be_present
+      expect(country_model.first).to be_present
     end
 
   end
@@ -223,12 +212,39 @@ describe FrozenRecord::Base do
   describe '#count' do
 
     it 'can count objects with no records' do
-      expect(Car.count).to be 0
+      expect(car_model.count).to be 0
     end
 
     it 'can count objects with records' do
-      expect(Country.count).to be 3
+      expect(country_model.count).to be 3
     end
 
   end
+end
+
+describe FrozenRecord::Base do
+  let(:country_model) { Country }
+  let(:car_model) { Car }
+  let(:animal_model) { Animal }
+
+  it_behaves_like 'main'
+
+  describe '.base_path' do
+
+    it 'raise a RuntimeError on first query attempt if not set' do
+      allow(country_model).to receive_message_chain(:base_path).and_return(nil)
+      expect {
+        country_model.file_path
+      }.to raise_error(ArgumentError)
+    end
+
+  end
+end
+
+describe FrozenRecord::Compact do
+  let(:country_model) { Compact::Country }
+  let(:car_model) { Compact::Car }
+  let(:animal_model) { Compact::Animal }
+
+  it_behaves_like 'main'
 end

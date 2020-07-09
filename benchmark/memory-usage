@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative 'setup'
+
+puts "regular: #{Country.memsize} bytes"
+puts "compact: #{Compact::Country.memsize} bytes"
+
+diff = (Compact::Country.memsize - Country.memsize).to_f / Country.memsize
+puts "diff: #{(diff * 100).round(2)}%"
