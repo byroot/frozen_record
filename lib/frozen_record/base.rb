@@ -21,6 +21,7 @@ module FrozenRecord
     FALSY_VALUES = [false, nil, 0, -''].to_set
 
     class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
+    class_attribute :index_definitions, instance_accessor: false, default: {}.freeze
 
     self.primary_key = 'id'
 
@@ -103,6 +104,11 @@ module FrozenRecord
         end
       end
 
+      def add_index(attribute, unique: false)
+        index = unique ? UniqueIndex.new(self, attribute) : Index.new(self, attribute)
+        self.index_definitions = index_definitions.merge(index.attribute => index).freeze
+      end
+
       def memsize(object = self, seen = Set.new.compare_by_identity)
         return 0 unless seen.add?(object)
 
@@ -143,7 +149,9 @@ module FrozenRecord
           records = Deduplication.deep_deduplicate!(records)
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
-          records.map { |r| load(r) }.freeze
+          records = records.map { |r| load(r) }.freeze
+          index_definitions.values.each { |index| index.build(records) }
+          records
         end
       end
 

@@ -1,6 +1,9 @@
 class Country < FrozenRecord::Base
   self.default_attributes = { contemporary: true, available: true }
 
+  add_index :name, unique: true
+  add_index :continent
+
   def self.republics
     where(king: nil)
   end

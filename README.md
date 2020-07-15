@@ -140,6 +140,22 @@ Country.european.republics.part_of_nato.order(id: :desc)
   - average
 
 
+## Indexing
+
+Querying is implemented as a simple linear search (`O(n)`). However if you are using Frozen Record with larger datasets, or are querying
+a collection repetedly, you can define indices for faster access.
+
+```ruby
+class Country < FrozenRecord::Base
+  add_index :name, unique: true
+  add_index :continent
+end
+```
+
+Composite index keys are not supported.
+
+The primary key isn't indexed by default.
+
 ## Configuration
 
 ### Reloading

@@ -175,9 +175,20 @@ module FrozenRecord
     def select_records(records)
       return records if @where_values.empty? && @where_not_values.empty?
 
+      indices = @klass.index_definitions
+      indexed_where_values, unindexed_where_values = @where_values.partition { |criteria| indices.key?(criteria.first) }
+
+      unless indexed_where_values.empty?
+        attribute, value = indexed_where_values.shift
+        records = indices[attribute].query(value)
+        indexed_where_values.each do |(attribute, value)|
+          records &= indices[attribute].query(value)
+        end
+      end
+
       records.select do |record|
-        @where_values.all? { |attr, value| compare_value(record[attr], value) } &&
-        @where_not_values.all? { |attr, value| !compare_value(record[attr], value) }
+        unindexed_where_values.all? { |attr, value| compare_value(record[attr], value) } &&
+        !@where_not_values.any? { |attr, value| compare_value(record[attr], value) }
       end
     end
 
@@ -226,12 +237,12 @@ module FrozenRecord
     end
 
     def where!(criterias)
-      @where_values += criterias.to_a
+      @where_values += criterias.map { |k, v| [k.to_s, v] }
       self
     end
 
     def where_not!(criterias)
-      @where_not_values += criterias.to_a
+      @where_not_values += criterias.map { |k, v| [k.to_s, v] }
       self
     end
 
