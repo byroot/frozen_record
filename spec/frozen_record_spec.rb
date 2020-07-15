@@ -83,7 +83,7 @@ RSpec.shared_examples 'main' do
   describe '.scope' do
 
     it 'defines a scope method' do
-      country_model.scope :north_american, -> { country_model.where(continent: 'North America') }
+      country_model.scope :north_american, -> { where(continent: 'North America') }
       expect(country_model).to respond_to(:north_american)
       expect(country_model.north_american.first.name).to be == 'Canada'
     end

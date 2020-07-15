@@ -156,10 +156,7 @@ module FrozenRecord
       end
 
       def scope(name, body)
-        unless body.respond_to?(:call)
-          raise ArgumentError, "The scope body needs to be callable."
-        end
-        singleton_class.send(:define_method, name) { |*args| body.call(*args) }
+        singleton_class.send(:define_method, name, &body)
       end
 
       alias_method :load, :new
