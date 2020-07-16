@@ -207,6 +207,14 @@ describe 'querying' do
       countries = Country.where(name: 'France', continent: 'Europe')
       expect(countries.length).to be == 1
     end
+
+    it 'can use indices with inclusion query' do
+      countries = Country.where(continent: ['Europe', 'North America'])
+      expect(countries.length).to be == 3
+
+      countries = Country.where(name: ['France', 'Canada'])
+      expect(countries.length).to be == 2
+    end
   end
 
   describe '.where.not' do

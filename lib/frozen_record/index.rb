@@ -20,6 +20,19 @@ module FrozenRecord
     end
 
     def query(value)
+      case value
+      when Array, Range
+        lookup_multi(value)
+      else
+        lookup(value)
+      end
+    end
+
+    def lookup_multi(values)
+      values.flat_map { |v| lookup(v) }
+    end
+
+    def lookup(value)
       @index.fetch(value, EMPTY_ARRAY)
     end
 
@@ -42,7 +55,13 @@ module FrozenRecord
       true
     end
 
-    def query(value)
+    def lookup_multi(values)
+      results = @index.values_at(*values)
+      results.compact!
+      results
+    end
+
+    def lookup(value)
       record = @index[value]
       record ? [record] : EMPTY_ARRAY
     end
