@@ -67,7 +67,7 @@ module FrozenRecord
     end
 
     def build(records)
-      @index = records.to_h { |r| [r[attribute], r] }
+      @index = records.each_with_object({}) { |r, index| index[r[attribute]] = r }
       if @index.size != records.size
         raise AttributeNonUnique, "#{model}##{attribute.inspect} is not unique."
       end
