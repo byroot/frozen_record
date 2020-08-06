@@ -21,7 +21,8 @@ module FrozenRecord
     FALSY_VALUES = [false, nil, 0, -''].to_set
 
     class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
-    class_attribute :index_definitions, instance_accessor: false, default: {}.freeze
+    class_attribute :index_definitions, instance_accessor: false
+    self.index_definitions = {}.freeze
 
     self.primary_key = 'id'
 
