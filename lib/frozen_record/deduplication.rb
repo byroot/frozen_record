@@ -24,7 +24,7 @@ module FrozenRecord
           return data if data.frozen?
           data.map! { |d| deep_deduplicate!(d) }.freeze
         when String
-          -data
+          -data.freeze
         else
           data.duplicable? ? data.freeze : data
         end
@@ -44,9 +44,9 @@ module FrozenRecord
           # String#-@ doesn't deduplicate the string if it's tainted.
           # So in such case we need to untaint it first.
           if data.tainted?
-            -(+data).untaint
+            -(+data).untaint.freeze
           else
-            -data
+            -data.freeze
           end
         else
           data.duplicable? ? data.freeze : data
