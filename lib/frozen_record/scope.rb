@@ -2,7 +2,7 @@
 
 module FrozenRecord
   class Scope
-    BLACKLISTED_ARRAY_METHODS = [
+    DISALLOWED_ARRAY_METHODS = [
       :compact!, :flatten!, :reject!, :reverse!, :rotate!, :map!,
       :shuffle!, :slice!, :sort!, :sort_by!, :delete_if,
       :keep_if, :pop, :shift, :delete_at, :compact
@@ -233,7 +233,7 @@ module FrozenRecord
     end
 
     def array_delegable?(method)
-      Array.method_defined?(method) && BLACKLISTED_ARRAY_METHODS.exclude?(method)
+      Array.method_defined?(method) && DISALLOWED_ARRAY_METHODS.exclude?(method)
     end
 
     def where!(criterias)
