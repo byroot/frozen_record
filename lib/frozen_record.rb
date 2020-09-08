@@ -5,12 +5,13 @@ require 'set'
 require 'active_support/all'
 require 'active_model'
 
+require 'dedup'
+
 require 'frozen_record/version'
 require 'frozen_record/scope'
 require 'frozen_record/index'
 require 'frozen_record/base'
 require 'frozen_record/compact'
-require 'frozen_record/deduplication'
 
 module FrozenRecord
   RecordNotFound = Class.new(StandardError)

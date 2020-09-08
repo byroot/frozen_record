@@ -52,7 +52,7 @@ module FrozenRecord
       alias_method :set_default_attributes, :default_attributes=
       private :set_default_attributes
       def default_attributes=(default_attributes)
-        set_default_attributes(Deduplication.deep_deduplicate!(default_attributes.stringify_keys))
+        set_default_attributes(Dedup.deep_intern!(default_attributes.stringify_keys))
       end
 
       alias_method :set_primary_key, :primary_key=
@@ -147,7 +147,7 @@ module FrozenRecord
         @records ||= begin
           records = backend.load(file_path)
           records.each { |r| assign_defaults!(r) }
-          records = Deduplication.deep_deduplicate!(records)
+          records = Dedup.deep_intern!(records)
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
           records = records.map { |r| load(r) }.freeze

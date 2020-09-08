@@ -14,7 +14,7 @@ module FrozenRecord
         @records ||= begin
           records = backend.load(file_path)
           records.each { |r| assign_defaults!(r) }
-          records = Deduplication.deep_deduplicate!(records)
+          records = Dedup.deep_intern!(records)
           @attributes = list_attributes(records).freeze
           build_attributes_cache
           define_attribute_methods(@attributes.to_a)
@@ -67,7 +67,7 @@ module FrozenRecord
 
     def attributes=(attributes)
       self.class.attributes.each do |attr|
-        instance_variable_set(self.class._attributes_cache[attr], Deduplication.deep_deduplicate!(attributes[attr]))
+        instance_variable_set(self.class._attributes_cache[attr], Dedup.deep_intern!(attributes[attr]))
       end
     end
 
