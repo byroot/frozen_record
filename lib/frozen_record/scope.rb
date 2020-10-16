@@ -227,6 +227,7 @@ module FrozenRecord
         super
       end
     end
+    ruby2_keywords :method_missing if respond_to?(:ruby2_keywords, true)
 
     def delegate_to_class(*args, &block)
       scoping { @klass.public_send(*args, &block) }
