@@ -12,6 +12,10 @@ class Country < FrozenRecord::Base
     where(nato: true)
   end
 
+  def self.continent_and_capital(continent, capital:)
+    where(continent: continent, capital: capital)
+  end
+
   def reverse_name
     name.reverse
   end

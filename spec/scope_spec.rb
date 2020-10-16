@@ -193,6 +193,11 @@ describe 'querying' do
       expect(countries.length).to be == 0
     end
 
+    it 'is chainable with methods of the form `def method(*args, **kargs)' do
+      countries = Country.republics.continent_and_capital('Europe', capital: 'Paris')
+      expect(countries.length).to be == 1
+    end
+
     it 'can be used with arrays' do
       countries = Country.where(id: [1,2])
       expect(countries.length).to be == 2
