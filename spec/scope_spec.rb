@@ -460,4 +460,20 @@ describe 'querying' do
 
   end
 
+  describe 'ActiveSupport::Notification' do
+
+    it 'sends a notification' do
+      callbacks = []
+      ActiveSupport::Notifications.subscribe('query.frozen_record') do |_, _, _, _, data|
+        callbacks << data
+      end
+
+      ids = Country.where(name: 'France').first
+
+      expect(callbacks.count).to be 1
+      expect(callbacks[0][:path]).to include('spec/fixtures/countries.yml.erb')
+    end
+
+  end
+
 end
