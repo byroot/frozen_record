@@ -61,8 +61,6 @@ module FrozenRecord
           YAML.load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
         end
       else
-        require 'dedup'
-
         def load_file(path)
           Dedup.deep_intern!(YAML.load_file(path) || Dedup::EMPTY_ARRAY)
         end
