@@ -146,8 +146,9 @@ module FrozenRecord
 
         @records ||= begin
           records = backend.load(file_path)
-          records.each { |r| assign_defaults!(r) }
-          records = Dedup.deep_intern!(records)
+          if default_attributes
+            records = records.map { |r| assign_defaults!(r.dup).freeze }.freeze
+          end
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
           records = records.map { |r| load(r) }.freeze

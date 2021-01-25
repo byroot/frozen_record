@@ -34,13 +34,41 @@ module FrozenRecord
             end
           end
 
-          YAML.load(yml_data) || []
+          load_string(yml_data)
         else
           if file_path.end_with?('.erb')
-            YAML.load(ERB.new(File.read(file_path)).result) || []
+            load_string(ERB.new(File.read(file_path)).result)
           else
-            YAML.load_file(file_path) || []
+            load_file(file_path)
           end
+        end
+      end
+
+      private
+
+      supports_freeze = begin
+        YAML.load_file(File.expand_path('../empty.json', __FILE__), freeze: true)
+      rescue ArgumentError
+        false
+      end
+
+      if supports_freeze
+        def load_file(path)
+          YAML.load_file(path, freeze: true) || Dedup::EMPTY_ARRAY
+        end
+
+        def load_string(yaml)
+          YAML.load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
+        end
+      else
+        require 'dedup'
+
+        def load_file(path)
+          Dedup.deep_intern!(YAML.load_file(path) || Dedup::EMPTY_ARRAY)
+        end
+
+        def load_string(yaml)
+          Dedup.deep_intern!(YAML.load(yaml) || Dedup::EMPTY_ARRAY)
         end
       end
     end
