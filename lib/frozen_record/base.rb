@@ -3,7 +3,6 @@
 require 'set'
 require 'active_support/descendants_tracker'
 require 'frozen_record/backends'
-require 'objspace'
 
 module FrozenRecord
   class Base

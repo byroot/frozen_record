@@ -10,6 +10,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 SimpleCov.start
 
+require 'objspace'
 require 'frozen_record'
 require 'frozen_record/test_helper'
 
