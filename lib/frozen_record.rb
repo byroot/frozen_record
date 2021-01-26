@@ -2,7 +2,6 @@
 
 require 'yaml'
 require 'set'
-require 'active_support/core_ext/hash/keys'
 require 'active_model'
 
 require 'dedup'
