@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'set'
 require 'active_support/descendants_tracker'
 require 'frozen_record/backends'
 
@@ -10,11 +9,6 @@ module FrozenRecord
     extend ActiveModel::Naming
     include ActiveModel::Conversion
     include ActiveModel::AttributeMethods
-    include ActiveModel::Serializers::JSON
-
-    if defined? ActiveModel::Serializers::Xml
-      include ActiveModel::Serializers::Xml
-    end
 
     FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
     FALSY_VALUES = [false, nil, 0, -''].to_set
