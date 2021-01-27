@@ -239,7 +239,7 @@ module FrozenRecord
     private
 
     def attribute?(attribute_name)
-      FALSY_VALUES.exclude?(self[attribute_name]) && self[attribute_name].present?
+      !FALSY_VALUES.include?(self[attribute_name]) && self[attribute_name].present?
     end
 
     def attribute_method?(attribute_name)

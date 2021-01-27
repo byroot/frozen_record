@@ -234,7 +234,7 @@ module FrozenRecord
     end
 
     def array_delegable?(method)
-      Array.method_defined?(method) && DISALLOWED_ARRAY_METHODS.exclude?(method)
+      Array.method_defined?(method) && !DISALLOWED_ARRAY_METHODS.include?(method)
     end
 
     def where!(criterias)

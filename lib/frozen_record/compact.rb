@@ -74,7 +74,7 @@ module FrozenRecord
 
     def attribute?(attribute_name)
       val = self[attribute_name]
-      Base::FALSY_VALUES.exclude?(val) && val.present?
+      !Base::FALSY_VALUES.include?(val) && val.present?
     end
   end
 end
