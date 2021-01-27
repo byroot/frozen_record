@@ -11,7 +11,13 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 SimpleCov.start
 
 require 'objspace'
-require 'frozen_record'
+
+if ENV['MINIMAL']
+  require 'frozen_record/minimal'
+else
+  require 'frozen_record'
+end
+
 require 'frozen_record/test_helper'
 
 FrozenRecord::Base.base_path = File.join(File.dirname(__FILE__), 'fixtures')
@@ -23,6 +29,7 @@ FrozenRecord.eager_load!
 RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
+  config.filter_run_excluding :exclude_minimal if ENV['MINIMAL']
 
   config.order = 'random'
 
