@@ -415,7 +415,7 @@ describe 'querying' do
 
   end
 
-  describe '.as_json' do
+  describe '.as_json', exclude_minimal: true do
 
     it 'serialize the results' do
       json = Country.all.as_json

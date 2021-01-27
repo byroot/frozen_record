@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         ruby: [ '2.5', '2.6', '2.7', '3.0' ]
-    name: Ruby ${{ matrix.ruby }} tests
+        minimal: [ false, true ]
+    name: Ruby ${{ matrix.ruby }} tests, minimal=${{ matrix.minimal }}
     steps:
       - uses: actions/checkout@v2
       - name: Setup Ruby
@@ -26,4 +27,6 @@ jobs:
           gem install bundler
           bundle install --jobs 4 --retry 3 --path=vendor/bundle
       - name: Run tests
+        env:
+          MINIMAL: ${{ matrix.minimal }}
         run: bundle exec rake
