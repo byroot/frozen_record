@@ -1,6 +1,8 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+minimal = ENV['MINIMAL'] == 'true'
+
 require 'pry'
 require 'simplecov'
 require 'coveralls'
@@ -12,7 +14,7 @@ SimpleCov.start
 
 require 'objspace'
 
-if ENV['MINIMAL']
+if minimal
   require 'frozen_record/minimal'
 else
   require 'frozen_record'
@@ -29,7 +31,7 @@ FrozenRecord.eager_load!
 RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
-  config.filter_run_excluding :exclude_minimal if ENV['MINIMAL']
+  config.filter_run_excluding :exclude_minimal if minimal
 
   config.order = 'random'
 
