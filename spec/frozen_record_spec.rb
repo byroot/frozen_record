@@ -156,6 +156,7 @@ RSpec.shared_examples 'main' do
         'continent' => 'North America',
         'available' => true,
         'contemporary' => true,
+        'official_languages' => %w(English French)
       }
     end
 
