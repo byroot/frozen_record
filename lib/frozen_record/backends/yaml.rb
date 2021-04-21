@@ -3,6 +3,8 @@
 module FrozenRecord
   module Backends
     module Yaml
+      autoload :ERB, 'erb'
+
       extend self
 
       # Transforms the model name into a valid filename.
