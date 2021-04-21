@@ -187,8 +187,8 @@ module FrozenRecord
       end
 
       records.select do |record|
-        unindexed_where_values.all? { |attr, value| compare_value(record[attr], value) } &&
-        !@where_not_values.any? { |attr, value| compare_value(record[attr], value) }
+        unindexed_where_values.all? { |attr, matcher| matcher.match?(record[attr]) } &&
+        !@where_not_values.any? { |attr, matcher| matcher.match?(record[attr]) }
       end
     end
 
@@ -238,12 +238,12 @@ module FrozenRecord
     end
 
     def where!(criterias)
-      @where_values += criterias.map { |k, v| [k.to_s, v] }
+      @where_values += criterias.map { |k, v| [k.to_s, Matcher.for(v)] }
       self
     end
 
     def where_not!(criterias)
-      @where_not_values += criterias.map { |k, v| [k.to_s, v] }
+      @where_not_values += criterias.map { |k, v| [k.to_s, Matcher.for(v)] }
       self
     end
 
@@ -266,9 +266,62 @@ module FrozenRecord
 
     private
 
-    def compare_value(actual, requested)
-      return actual == requested unless requested.is_a?(Array) || requested.is_a?(Range)
-      requested.include?(actual)
+    class Matcher
+      class << self
+        def for(value)
+          case value
+          when Array
+            IncludeMatcher.new(value)
+          when Range
+            CoverMatcher.new(value)
+          else
+            new(value)
+          end
+        end
+      end
+
+      attr_reader :value
+
+      def hash
+        self.class.hash ^ value.hash
+      end
+
+      def initialize(value)
+        @value = value
+      end
+
+      def ranged?
+        false
+      end
+
+      def match?(other)
+        @value == other
+      end
+
+      def ==(other)
+        self.class == other.class && value == other.value
+      end
+      alias_method :eql?, :==
+    end
+
+    class IncludeMatcher < Matcher
+      def ranged?
+        true
+      end
+
+      def match?(other)
+        @value.include?(other)
+      end
+    end
+
+    class CoverMatcher < Matcher
+      def ranged?
+        true
+      end
+
+      def match?(other)
+        @value.cover?(other)
+      end
     end
   end
 end

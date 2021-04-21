@@ -445,8 +445,8 @@ describe 'querying' do
     it 'returns true when the same scope has be rechained' do
       scope_a = Country.nato.republics.nato.republics
       scope_b = Country.republics.nato
-      expect(scope_a.instance_variable_get(:@where_values)).to be == [['nato', true], ['king', nil], ['nato', true], ['king', nil]]
-      expect(scope_b.instance_variable_get(:@where_values)).to be == [['king', nil], ['nato', true]]
+      expect(scope_a.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['nato', true], ['king', nil], ['nato', true], ['king', nil]]
+      expect(scope_b.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['king', nil], ['nato', true]]
       expect(scope_a).to be == scope_b
     end
   end

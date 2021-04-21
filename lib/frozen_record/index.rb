@@ -19,12 +19,11 @@ module FrozenRecord
       false
     end
 
-    def query(value)
-      case value
-      when Array, Range
-        lookup_multi(value)
+    def query(matcher)
+      if matcher.ranged?
+        lookup_multi(matcher.value)
       else
-        lookup(value)
+        lookup(matcher.value)
       end
     end
 
