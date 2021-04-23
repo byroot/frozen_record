@@ -180,6 +180,20 @@ describe 'querying' do
 
   end
 
+  describe '.find_each' do
+
+    it 'yields the records one by one' do
+      scope = Country.where(name: 'France')
+      count = 0
+      scope.find_each do |country|
+        expect(country).to be_a Country
+        count += 1
+      end
+      expect(count).to be == 1
+    end
+
+  end
+
   describe '.where' do
 
     it 'returns the records that match given criterias' do

@@ -9,6 +9,7 @@ module FrozenRecord
     ].to_set
 
     delegate :first, :last, :length, :collect, :map, :each, :all?, :include?, :to_ary, :to_json, :as_json, :count, to: :to_a
+    alias_method :find_each, :each
     if defined? ActiveModel::Serializers::Xml
       delegate :to_xml, to: :to_a
     end
