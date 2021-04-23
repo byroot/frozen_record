@@ -201,7 +201,9 @@ module FrozenRecord
       def list_attributes(records)
         attributes = Set.new
         records.each do |record|
-          attributes.merge(record.keys)
+          record.each_key do |key|
+            attributes.add(key)
+          end
         end
         attributes
       end
