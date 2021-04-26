@@ -83,7 +83,7 @@ module FrozenRecord
         store[:scope] = scope
       end
 
-      delegate :find, :find_each, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!,
+      delegate :each, :find, :find_each, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!,
                :pluck, :ids, :order, :limit, :offset, :minimum, :maximum, :average, :sum, :count,
                to: :current_scope
 

@@ -90,6 +90,19 @@ RSpec.shared_examples 'main' do
 
   end
 
+  describe '.each' do
+
+    it 'yields the records one by one' do
+      count = 0
+      Country.each do |country|
+        expect(country).to be_a Country
+        count += 1
+      end
+      expect(count).to be == Country.count
+    end
+
+  end
+
   describe '.find_each' do
 
     it 'yields the records one by one' do
