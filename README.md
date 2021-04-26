@@ -1,8 +1,6 @@
 # FrozenRecord
 
 [![Build Status](https://secure.travis-ci.org/byroot/frozen_record.svg)](http://travis-ci.org/byroot/frozen_record)
-[![Code Climate](https://codeclimate.com/github/byroot/frozen_record.svg)](https://codeclimate.com/github/byroot/frozen_record)
-[![Coverage Status](https://coveralls.io/repos/byroot/frozen_record/badge.svg)](https://coveralls.io/r/byroot/frozen_record)
 [![Gem Version](https://badge.fury.io/rb/frozen_record.svg)](http://badge.fury.io/rb/frozen_record)
 
 ActiveRecord-like interface for **read only** access to static data files.
