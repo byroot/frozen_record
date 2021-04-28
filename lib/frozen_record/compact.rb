@@ -25,15 +25,15 @@ module FrozenRecord
         end
       end
 
-      if ActiveModel.gem_version >= Gem::Version.new('6.1.0.alpha')
-        def define_method_attribute(attr, owner:)
-          owner << "attr_reader #{attr.inspect}"
-        end
-      else
-        def define_method_attribute(attr)
-          generated_attribute_methods.attr_reader(attr)
-        end
-      end
+      # if ActiveModel.gem_version >= Gem::Version.new('6.1.0.alpha')
+      #   def define_method_attribute(attr, owner:)
+      #     owner << "attr_reader #{attr.inspect}"
+      #   end
+      # else
+      #   def define_method_attribute(attr)
+      #     generated_attribute_methods.attr_reader(attr)
+      #   end
+      # end
 
       attr_reader :_attributes_cache
 
@@ -63,6 +63,7 @@ module FrozenRecord
         instance_variable_get(var)
       end
     end
+    alias_method :attribute, :[]
 
     private
 
