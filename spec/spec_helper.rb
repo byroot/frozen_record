@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 minimal = ENV['MINIMAL'] == 'true'
 require 'objspace'
+require 'time'
 
 if minimal
   require 'frozen_record/minimal'
