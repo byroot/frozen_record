@@ -48,32 +48,35 @@ module FrozenRecord
 
       private
 
-      attr_reader :load_method, :load_file_method
-
-      @load_method = YAML.respond_to?(:unsafe_load) ? :unsafe_load : :load
-      @load_file_method = YAML.respond_to?(:unsafe_load_file) ? :unsafe_load_file : :load_file
-
       supports_freeze = begin
         YAML.load_file(File.expand_path('../empty.json', __FILE__), freeze: true)
       rescue ArgumentError
         false
       end
 
-      if supports_freeze
+      if YAML.respond_to?(:unsafe_load_file)
         def load_file(path)
-          YAML.public_send(load_file_method, path, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.unsafe_load_file(path, freeze: true) || Dedup::EMPTY_ARRAY
         end
 
         def load_string(yaml)
-          YAML.public_send(load_method, yaml, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.unsafe_load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
+        end
+      elsif supports_freeze
+        def load_file(path)
+          YAML.load_file(path, freeze: true) || Dedup::EMPTY_ARRAY
+        end
+
+        def load_string(yaml)
+          YAML.load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
         end
       else
         def load_file(path)
-          Dedup.deep_intern!(YAML.public_send(load_file_method, path) || Dedup::EMPTY_ARRAY)
+          Dedup.deep_intern!(YAML.load_file(path) || Dedup::EMPTY_ARRAY)
         end
 
         def load_string(yaml)
-          Dedup.deep_intern!(YAML.public_send(load_method, yaml) || Dedup::EMPTY_ARRAY)
+          Dedup.deep_intern!(YAML.load(yaml) || Dedup::EMPTY_ARRAY)
         end
       end
     end
