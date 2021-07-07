@@ -190,7 +190,7 @@ require 'frozen_record/test_helper'
 
 class CountryTest < ActiveSupport::TestCase
   setup do
-    test_fixtures_base_path = Rails.root.join(%w(test support fixtures))
+    test_fixtures_base_path = Rails.root.join('test/support/fixtures')
     FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
   end
 
