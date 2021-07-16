@@ -170,7 +170,9 @@ module FrozenRecord
     end
 
     def matching_records
-      sort_records(select_records(@klass.load_records))
+      ActiveSupport::Notifications.instrument 'query.frozen_record', path: @klass.file_path do
+        sort_records(select_records(@klass.load_records))
+      end
     end
 
     def select_records(records)
