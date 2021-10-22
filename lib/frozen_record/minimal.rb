@@ -23,5 +23,5 @@ module FrozenRecord
     end
   end
 
-  self.deprecated_yaml_erb_backend = true
+  self.deprecated_yaml_erb_backend = false
 end
