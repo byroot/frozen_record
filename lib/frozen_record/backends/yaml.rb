@@ -49,7 +49,7 @@ module FrozenRecord
       private
 
       supports_freeze = begin
-        YAML.load_file(File.expand_path('../empty.json', __FILE__), freeze: true)
+        YAML.load_file(File.expand_path('../empty.yml', __FILE__), freeze: true)
       rescue ArgumentError
         false
       end
