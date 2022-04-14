@@ -38,19 +38,35 @@ describe 'test fixture loading' do
     end
   end
 
+  describe '.unload_fixture' do
+    it 'restores the default fixtures for the specified model class' do
+      test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper')
+
+      FrozenRecord::TestHelper.load_fixture(Continent, test_fixtures_base_path)
+      FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
+      FrozenRecord::TestHelper.unload_fixture(Country)
+
+      expect(Continent.count).to be == 1
+      expect(Country.count).to be == 3
+    end
+  end
+
   describe '.unload_fixtures' do
     it 'restores the default fixtures' do
       test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper')
 
+      FrozenRecord::TestHelper.load_fixture(Continent, test_fixtures_base_path)
       FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
       FrozenRecord::TestHelper.unload_fixtures
 
+      expect(Continent.count).to be == 3
       expect(Country.count).to be == 3
     end
 
     it 'does has no effect if no alternate fixtures were loaded' do
       FrozenRecord::TestHelper.unload_fixtures
 
+      expect(Continent.count).to be == 3
       expect(Country.count).to be == 3
     end
   end
