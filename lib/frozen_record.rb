@@ -2,4 +2,4 @@
 
 require 'frozen_record/minimal'
 require 'frozen_record/serialization'
-require 'frozen_record/railtie' if defined?(Rails)
+require 'frozen_record/railtie' if defined?(Rails::Railtie)
