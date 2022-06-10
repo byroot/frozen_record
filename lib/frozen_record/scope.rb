@@ -173,6 +173,8 @@ module FrozenRecord
       sort_records(select_records(@klass.load_records))
     end
 
+    ARRAY_INTERSECTION = Array.method_defined?(:intersection)
+
     def select_records(records)
       return records if @where_values.empty? && @where_not_values.empty?
 
@@ -190,7 +192,13 @@ module FrozenRecord
         unindexed_where_values += usable_indexes.map { |a| a.first(2) }
 
         unless usable_indexes.empty?
-          records = records.intersection(*usable_indexes.map(&:last))
+          if ARRAY_INTERSECTION
+            records = records.intersection(*usable_indexes.map(&:last))
+          else
+            usable_indexes.each do |_, _, indexed_records|
+              records &= indexed_records
+            end
+          end
         end
       end
 
