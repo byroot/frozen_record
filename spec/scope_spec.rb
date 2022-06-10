@@ -476,29 +476,26 @@ describe 'querying' do
 
   context 'when max_records_scan is set' do
 
-    around :each do |example|
-      FrozenRecord::Base.max_records_scan = 1
-      example.run
-      FrozenRecord::Base.max_records_scan = nil
-    end
-
     it 'raises on slow queries' do
       expect {
-        Country.where(king: "Louis").to_a
+        FrozenRecord::Base.with_max_records_scan(1) do
+          Country.where(king: "Louis").to_a
+        end
       }.to raise_error(FrozenRecord::SlowQuery)
     end
 
     it 'is accurate' do
-      FrozenRecord::Base.max_records_scan = 60
-      expect(Price.count).to be == 6_000
+      FrozenRecord::Base.with_max_records_scan(60) do
+        expect(Price.count).to be == 6_000
 
-      Price.where(plan_name: "plan_24", currency: [nil, "EUR"], period: "monthly", type: "base").each do |price|
-        expect(price.plan_name).to be == "plan_24"
-        unless price.currency.nil?
-          expect(price.currency).to be  == "EUR"
+        Price.where(plan_name: "plan_24", currency: [nil, "EUR"], period: "monthly", type: "base").each do |price|
+          expect(price.plan_name).to be == "plan_24"
+          unless price.currency.nil?
+            expect(price.currency).to be  == "EUR"
+          end
+          expect(price.period).to be == "monthly"
+          expect(price.type).to be == "base"
         end
-        expect(price.period).to be == "monthly"
-        expect(price.type).to be == "base"
       end
     end
 

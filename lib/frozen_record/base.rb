@@ -45,6 +45,14 @@ module FrozenRecord
     end
 
     class << self
+      def with_max_records_scan(value)
+        previous_max_records_scan = max_records_scan
+        self.max_records_scan = value
+        yield
+      ensure
+        self.max_records_scan = previous_max_records_scan
+      end
+
       alias_method :set_default_attributes, :default_attributes=
       private :set_default_attributes
       def default_attributes=(default_attributes)

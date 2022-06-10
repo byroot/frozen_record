@@ -1,5 +1,7 @@
 # Unreleased
 
+- Add `FrozenRecord::Base.with_max_record_scan` for more easily allowing larger amount in specific tests.
+
 # v0.24.1
 
 - Fix index selection not applying some restrictions.
