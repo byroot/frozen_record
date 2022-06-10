@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.24.1
+
 - Fix index selection not applying some restrictions.
 
 # v0.24.0 (yanked)
