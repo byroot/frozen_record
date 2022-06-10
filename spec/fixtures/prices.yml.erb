@@ -1,0 +1,13 @@
+<% 100.times.map { |i| "plan_#{i}"}.each do |plan_name| %>
+  <% ["base", "online", "retail"].each do |type| %>
+    <% [nil, "USD", "EUR", "GBP", "JPY"].each do |currency| %>
+     <% ["monthly", "annual", "biennial", "triennial"].each do |period| %>
+- plan_name: <%= plan_name %>
+  type: <%= type %>
+  period: <%= period %>
+  currency: <%= currency %>
+  amount: 10.0
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
