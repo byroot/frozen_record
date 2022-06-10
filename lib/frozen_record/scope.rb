@@ -180,10 +180,17 @@ module FrozenRecord
       indexed_where_values, unindexed_where_values = @where_values.partition { |criteria| indices.key?(criteria.first) }
 
       unless indexed_where_values.empty?
-        attribute, value = indexed_where_values.shift
-        records = indices[attribute].query(value)
-        indexed_where_values.each do |(attribute, value)|
-          records &= indices[attribute].query(value)
+        usable_indexes = indexed_where_values.map { |(attribute, value)| [attribute, value, indices[attribute].query(value)] }
+        usable_indexes.sort_by! { |r| r[2].size }
+        records = usable_indexes.shift.last
+
+        # If the index is 5 times bigger that the current set of records it's not worth doing an array intersection.
+        # The value is somewhat arbitrary and could be adjusted.
+        useless_indexes = usable_indexes.reject! { |_, _, indexed_records| indexed_records.size > records.size * 5}
+        unindexed_where_values += usable_indexes.map { |a| a.first(2) }
+
+        unless usable_indexes.empty?
+          records = records.intersection(*usable_indexes.map(&:last))
         end
       end
 
