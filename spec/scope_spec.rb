@@ -474,4 +474,19 @@ describe 'querying' do
 
   end
 
+  context 'when max_records_scan is set' do
+
+    around :each do |example|
+      FrozenRecord::Base.max_records_scan = 1
+      example.run
+      FrozenRecord::Base.max_records_scan = nil
+    end
+
+    it 'raises on slow queries' do
+      expect {
+        Country.where(king: "Louis").to_a
+      }.to raise_error(FrozenRecord::SlowQuery)
+    end
+
+  end
 end

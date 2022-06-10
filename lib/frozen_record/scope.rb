@@ -187,6 +187,10 @@ module FrozenRecord
         end
       end
 
+      if @klass.max_records_scan && records.size > @klass.max_records_scan
+        raise SlowQuery, "Scanning #{records.size} records is too slow, the allowed maximum is #{@klass.max_records_scan}. Try to find a better index or consider an alternative storage"
+      end
+
       records.select do |record|
         unindexed_where_values.all? { |attr, matcher| matcher.match?(record[attr]) } &&
         !@where_not_values.any? { |attr, matcher| matcher.match?(record[attr]) }

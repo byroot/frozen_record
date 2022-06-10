@@ -4,6 +4,8 @@ require 'active_support/descendants_tracker'
 require 'frozen_record/backends'
 
 module FrozenRecord
+  SlowQuery = Class.new(StandardError)
+
   class Base
     extend ActiveSupport::DescendantsTracker
     extend ActiveModel::Naming
@@ -15,6 +17,7 @@ module FrozenRecord
 
     class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
     class_attribute :index_definitions, instance_accessor: false
+    class_attribute :max_records_scan, instance_accessor: false
     self.index_definitions = {}.freeze
 
     self.primary_key = 'id'
