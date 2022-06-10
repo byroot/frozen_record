@@ -1,6 +1,8 @@
 # Unreleased
 
-# v0.24.0
+- Fix index selection not applying some restrictions.
+
+# v0.24.0 (yanked)
 
 - Improve index selection and combinaison. Should significantly help with performance in some cases.
 - Implement `max_records_scan` to reject slow queries.

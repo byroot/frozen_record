@@ -188,8 +188,8 @@ module FrozenRecord
 
         # If the index is 5 times bigger that the current set of records it's not worth doing an array intersection.
         # The value is somewhat arbitrary and could be adjusted.
-        useless_indexes = usable_indexes.reject! { |_, _, indexed_records| indexed_records.size > records.size * 5}
-        unindexed_where_values += usable_indexes.map { |a| a.first(2) }
+        useless_indexes, usable_indexes = usable_indexes.partition { |_, _, indexed_records| indexed_records.size > records.size * 5 }
+        unindexed_where_values += useless_indexes.map { |a| a.first(2) }
 
         unless usable_indexes.empty?
           if ARRAY_INTERSECTION
