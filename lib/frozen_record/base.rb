@@ -11,6 +11,7 @@ module FrozenRecord
 
     def ignore_max_records_scan
       previous = enforce_max_records_scan
+      self.enforce_max_records_scan = false
       yield
     ensure
       self.enforce_max_records_scan = previous

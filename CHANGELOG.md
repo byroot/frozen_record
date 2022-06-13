@@ -1,5 +1,9 @@
 # Unreleased
 
+# v0.25.2
+
+- Fix FrozenRecord.ignore_max_records_scan not applying
+
 # v0.25.1
 
 - More reliable way to disable max_records_scan checks when loading records.
