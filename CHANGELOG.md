@@ -1,5 +1,7 @@
 # Unreleased
 
+- Also disable max_records_scan when loading `Compact` records.
+
 # v0.25.2
 
 - Fix FrozenRecord.ignore_max_records_scan not applying

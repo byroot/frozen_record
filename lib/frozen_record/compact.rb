@@ -19,7 +19,7 @@ module FrozenRecord
           @attributes = list_attributes(records).freeze
           build_attributes_cache
           define_attribute_methods(@attributes.to_a)
-          records = records.map { |r| load(r) }.freeze
+          records = FrozenRecord.ignore_max_records_scan { records.map { |r| load(r) }.freeze }
           index_definitions.values.each { |index| index.build(records) }
           records
         end
