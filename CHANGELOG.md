@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.25.0
+
 - Disable max_records_scan checks when loading records.
 - Add `FrozenRecord::Base.with_max_record_scan` for more easily allowing larger amount in specific tests.
 
