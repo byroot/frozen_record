@@ -1,5 +1,7 @@
 # Unreleased
 
+- More reliable way to disable max_records_scan checks when loading records.
+
 # v0.25.0
 
 - Disable max_records_scan checks when loading records.

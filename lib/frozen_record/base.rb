@@ -6,6 +6,18 @@ require 'frozen_record/backends'
 module FrozenRecord
   SlowQuery = Class.new(StandardError)
 
+  class << self
+    attr_accessor :enforce_max_records_scan
+
+    def ignore_max_records_scan
+      previous = enforce_max_records_scan
+      yield
+    ensure
+      self.enforce_max_records_scan = previous
+    end
+  end
+  @enforce_max_records_scan = true
+
   class Base
     extend ActiveSupport::DescendantsTracker
     extend ActiveModel::Naming
@@ -156,7 +168,7 @@ module FrozenRecord
           end
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
-          records = with_max_records_scan(nil) { records.map { |r| load(r) }.freeze }
+          records = FrozenRecord.ignore_max_records_scan { records.map { |r| load(r) }.freeze }
           index_definitions.values.each { |index| index.build(records) }
           records
         end
