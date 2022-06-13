@@ -242,16 +242,12 @@ module FrozenRecord
       if array_delegable?(method_name)
         to_a.public_send(method_name, *args, &block)
       elsif @klass.respond_to?(method_name)
-        delegate_to_class(method_name, *args, &block)
+        scoping { @klass.public_send(method_name, *args, &block) }
       else
         super
       end
     end
     ruby2_keywords :method_missing if respond_to?(:ruby2_keywords, true)
-
-    def delegate_to_class(*args, &block)
-      scoping { @klass.public_send(*args, &block) }
-    end
 
     def array_delegable?(method)
       Array.method_defined?(method) && !DISALLOWED_ARRAY_METHODS.include?(method)

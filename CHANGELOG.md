@@ -1,5 +1,6 @@
 # Unreleased
 
+- Minor Ruby 3.2 compatiblity fix (regarding `ruby2_keywords`).
 - Also disable max_records_scan when loading `Compact` records.
 
 # v0.25.2
