@@ -156,7 +156,7 @@ module FrozenRecord
           end
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
-          records = records.map { |r| load(r) }.freeze
+          records = with_max_records_scan(nil) { records.map { |r| load(r) }.freeze }
           index_definitions.values.each { |index| index.build(records) }
           records
         end
