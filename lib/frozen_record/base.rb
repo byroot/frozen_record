@@ -252,7 +252,7 @@ module FrozenRecord
     alias_method :attribute, :[]
 
     def ==(other)
-      super || other.is_a?(self.class) && other.id == id
+      super || other.is_a?(self.class) && !id.nil? && other.id == id
     end
 
     def persisted?

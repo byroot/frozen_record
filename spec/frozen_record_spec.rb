@@ -149,6 +149,13 @@ RSpec.shared_examples 'main' do
       expect(country).to be == second_country
     end
 
+    it 'returns false if both instances are from the same class and their ids are nil' do
+      country = country_model.new(id: nil)
+      second_country = country_model.new(id: nil)
+
+      expect(country).to_not be == second_country
+    end
+
     it 'returns false if both instances are not from the same class' do
       country = country_model.first
       car = car_model.new(id: country.id)
