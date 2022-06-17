@@ -1,5 +1,7 @@
 # Unreleased
 
+- `FrozenRecord::Base#==` now returns `false` if the primary key is `nil` (to match the `ActiveRecord::Base` implementation)
+
 # v0.25.4
 
 - Minor Ruby 3.2 compatiblity fix (regarding `ruby2_keywords`).
