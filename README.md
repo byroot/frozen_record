@@ -3,7 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/byroot/frozen_record.svg)](http://travis-ci.org/byroot/frozen_record)
 [![Gem Version](https://badge.fury.io/rb/frozen_record.svg)](http://badge.fury.io/rb/frozen_record)
 
-Activec Record-like interface for **read only** access to static data files of reasonable size.
+Active Record-like interface for **read only** access to static data files of reasonable size.
 
 ## Installation
 
