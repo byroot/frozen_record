@@ -156,7 +156,7 @@ The primary key isn't indexed by default.
 
 ## Limitations
 
-Frozen Record is not meant to operate or large unindexed datasets.
+Frozen Record is not meant to operate on large unindexed datasets.
 
 To ensure that it doesn't happen by accident, you can set `FrozenRecord::Base.max_records_scan = 500` (or whatever limit makes sense to you), in your development and test environments.
 This setting will cause Frozen Record to raise an error if it has to scan more than `max_records_scan` records. This property can also be set on a per model basis.
