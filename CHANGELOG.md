@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.26.0
+
 - Drop dependency on `dedup` gem.
 
 # v0.25.5
