@@ -69,7 +69,7 @@ module FrozenRecord
       alias_method :set_default_attributes, :default_attributes=
       private :set_default_attributes
       def default_attributes=(default_attributes)
-        set_default_attributes(Dedup.deep_intern!(default_attributes.transform_keys(&:to_s)))
+        set_default_attributes(default_attributes.transform_keys(&:to_s))
       end
 
       alias_method :set_primary_key, :primary_key=

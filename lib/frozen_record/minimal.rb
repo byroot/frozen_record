@@ -4,8 +4,6 @@ require 'yaml'
 require 'set'
 require 'active_model'
 
-require 'dedup'
-
 require 'frozen_record/version'
 require 'frozen_record/scope'
 require 'frozen_record/index'

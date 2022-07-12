@@ -56,27 +56,27 @@ module FrozenRecord
 
       if YAML.respond_to?(:unsafe_load_file)
         def load_file(path)
-          YAML.unsafe_load_file(path, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.unsafe_load_file(path, freeze: true) || [].freeze
         end
 
         def load_string(yaml)
-          YAML.unsafe_load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.unsafe_load(yaml, freeze: true) || [].freeze
         end
       elsif supports_freeze
         def load_file(path)
-          YAML.load_file(path, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.load_file(path, freeze: true) || [].freeze
         end
 
         def load_string(yaml)
-          YAML.load(yaml, freeze: true) || Dedup::EMPTY_ARRAY
+          YAML.load(yaml, freeze: true) || [].freeze
         end
       else
         def load_file(path)
-          Dedup.deep_intern!(YAML.load_file(path) || Dedup::EMPTY_ARRAY)
+          YAML.load_file(path) || [].freeze
         end
 
         def load_string(yaml)
-          Dedup.deep_intern!(YAML.load(yaml) || Dedup::EMPTY_ARRAY)
+          YAML.load(yaml) || [].freeze
         end
       end
     end

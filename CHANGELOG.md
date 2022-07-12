@@ -1,5 +1,7 @@
 # Unreleased
 
+- Drop dependency on `dedup` gem.
+
 # v0.25.5
 
 - `FrozenRecord::Base#==` now returns `false` if the primary key is `nil` (to match the `ActiveRecord::Base` implementation)

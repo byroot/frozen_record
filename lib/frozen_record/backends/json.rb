@@ -19,16 +19,16 @@ module FrozenRecord
 
         if supports_freeze
           def load(file_path)
-            JSON.load_file(file_path, freeze: true) || Dedup::EMPTY_ARRAY
+            JSON.load_file(file_path, freeze: true) || [].freeze
           end
         else
           def load(file_path)
-            Dedup.deep_intern!(JSON.load_file(file_path) || Dedup::EMPTY_ARRAY)
+            JSON.load_file(file_path) || [].freeze
           end
         end
       else
         def load(file_path)
-          Dedup.deep_intern!(JSON.parse(File.read(file_path)) || Dedup::EMPTY_ARRAY)
+          JSON.parse(File.read(file_path)) || [].freeze
         end
       end
     end

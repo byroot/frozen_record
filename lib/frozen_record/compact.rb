@@ -62,7 +62,7 @@ module FrozenRecord
 
     def attributes=(attributes)
       self.class.attributes.each do |attr|
-        instance_variable_set(self.class._attributes_cache[attr], Dedup.deep_intern!(attributes[attr]))
+        instance_variable_set(self.class._attributes_cache[attr], attributes[attr])
       end
     end
 
