@@ -174,6 +174,14 @@ FrozenRecord::Base.auto_reloading = true # Activate reloading for all models
 Country.auto_reloading # Activate reloading for `Country` only
 ```
 
+### Cloning
+
+By default, FrozenRecord objects are instantiated once and then cached indefinitely in memory. Each time a finder method is called, the same cached object is returned. As a result, any state you set on the FrozenRecord object (in instance variables, for example) is shared state and will remain present on that object when it is next returned from a finder method.
+
+This behavior can be unintuitive for users of ActiveRecord, since each time an ActiveRecord finder method is called a new object is instantiated with its own separate state.
+
+If you are storing state on your objects and prefer the ActiveRecord behavior, set `FrozenRecord::Base.clone_on_find = true` to receive a new object each time you call a finder method on that class.
+
 ## Testing
 
 Testing your FrozenRecord-backed models with test fixtures is made easier with:

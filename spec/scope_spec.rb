@@ -500,4 +500,44 @@ describe 'querying' do
     end
 
   end
+
+  context 'when clone_on_find is set' do
+    around(:each) do |example|
+      previous_value = Country.clone_on_find
+      Country.clone_on_find = true
+      example.run
+    ensure
+      Country.clone_on_find = previous_value
+    end
+
+    it 'returns a new object each time find is called' do
+      object_a = Country.find(1)
+      object_a.gdp = 5_000
+
+      object_b = Country.find(1)
+
+      expect(object_a.gdp).to eq(5_000)
+      expect(object_b.gdp).to be_nil
+    end
+  end
+
+  context 'when clone_on_find is not set' do
+    around(:each) do |example|
+      previous_value = Country.clone_on_find
+      Country.clone_on_find = false
+      example.run
+    ensure
+      Country.clone_on_find = previous_value
+    end
+
+    it 'returns the same object each time find is called' do
+      object_a = Country.find(1)
+      object_a.gdp = 5_000
+
+      object_b = Country.find(1)
+
+      expect(object_a.gdp).to eq(5_000)
+      expect(object_b.gdp).to eq(5_000)
+    end
+  end
 end

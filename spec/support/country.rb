@@ -19,6 +19,8 @@ class Country < FrozenRecord::Base
   def reverse_name
     name.reverse
   end
+
+  attr_accessor :gdp
 end
 
 module Compact

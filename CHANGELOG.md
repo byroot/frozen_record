@@ -1,5 +1,7 @@
 # Unreleased
 
+- Implement `clone_on_find` option to return a new object each time a finder method is called.
+
 # v0.26.0
 
 - Drop dependency on `dedup` gem.

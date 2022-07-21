@@ -34,7 +34,7 @@ module FrozenRecord
     end
 
     def find_by_id(id)
-      matching_records.find { |r| r.id == id }
+      clone_record(matching_records.find { |r| r.id == id })
     end
 
     def find(id)
@@ -166,7 +166,7 @@ module FrozenRecord
     end
 
     def query_results
-      slice_records(matching_records)
+      clone_records(slice_records(matching_records))
     end
 
     def matching_records
@@ -226,6 +226,15 @@ module FrozenRecord
       first = @offset || 0
       last = first + (@limit || records.length)
       records[first...last] || []
+    end
+
+    def clone_records(records)
+      records.map { |record| clone_record(record) }
+    end
+
+    def clone_record(record)
+      return record unless @klass.clone_on_find
+      record.clone
     end
 
     def compare(record_a, record_b)
