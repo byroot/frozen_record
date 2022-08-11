@@ -23,6 +23,13 @@ class LargeCountry < Country
   end
 end
 
+LargeCountry.eager_load!
+
+puts "=== unique index lookup ==="
+Benchmark.ips do |x|
+  x.report('pk lookup') { LargeCountry.find_by(name: "Canada1") }
+end
+
 puts "=== simple scalar match ==="
 Benchmark.ips do |x|
   x.report('simple') { LargeCountry.nato.size }

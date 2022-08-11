@@ -107,7 +107,7 @@ module FrozenRecord
         store[:scope] = scope
       end
 
-      delegate :each, :find, :find_each, :find_by_id, :find_by, :find_by!, :where, :first, :first!, :last, :last!,
+      delegate :each, :find_each, :where, :first, :first!, :last, :last!,
                :pluck, :ids, :order, :limit, :offset, :minimum, :maximum, :average, :sum, :count,
                to: :current_scope
 
@@ -121,6 +121,31 @@ module FrozenRecord
             file_path
           end
         end
+      end
+
+      def find_by_id(id)
+        find_by(primary_key => id)
+      end
+
+      def find(id)
+        raise RecordNotFound, "Can't lookup record without ID" unless id
+        find_by(primary_key => id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
+      end
+
+      def find_by(criterias)
+        if criterias.size == 1
+          criterias.each do |attribute, value|
+            attribute = attribute.to_s
+            if index = index_definitions[attribute]
+              return index.lookup(value).first
+            end
+          end
+        end
+        current_scope.find_by(criterias)
+      end
+
+      def find_by!(criterias)
+        find_by(criterias) or raise RecordNotFound, "No record matched"
       end
 
       def add_index(attribute, unique: false)

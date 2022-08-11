@@ -34,12 +34,17 @@ module FrozenRecord
     end
 
     def find_by_id(id)
-      matching_records.find { |r| r.id == id }
+      find_by(@klass.primary_key => id)
     end
 
     def find(id)
       raise RecordNotFound, "Can't lookup record without ID" unless id
-      find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
+
+      scope = self
+      if @limit || @offset
+        scope = limit(nil).offset(nil)
+      end
+      scope.find_by_id(id) or raise RecordNotFound, "Couldn't find a record with ID = #{id.inspect}"
     end
 
     def find_by(criterias)

@@ -1,5 +1,7 @@
 # Unreleased
 
+- Optimized single attribute lookup.
+
 # v0.26.0
 
 - Drop dependency on `dedup` gem.
