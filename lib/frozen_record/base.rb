@@ -137,6 +137,7 @@ module FrozenRecord
           criterias.each do |attribute, value|
             attribute = attribute.to_s
             if index = index_definitions[attribute]
+              load_records
               return index.lookup(value).first
             end
           end
