@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.26.1
+
 - Optimized single attribute lookup.
 
 # v0.26.0
