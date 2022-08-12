@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fix `Model.find_by` fastpath raising an error when called before records are loaded.
+
 # v0.26.1
 
 - Optimized single attribute lookup.

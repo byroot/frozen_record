@@ -137,6 +137,7 @@ module FrozenRecord
           criterias.each do |attribute, value|
             attribute = attribute.to_s
             if index = index_definitions[attribute]
+              load_records
               return index.lookup(value).first
             end
           end
@@ -181,10 +182,15 @@ module FrozenRecord
         load_records
       end
 
+      def unload!
+        @records = nil
+        index_definitions.values.each(&:reset)
+        undefine_attribute_methods
+      end
+
       def load_records(force: false)
         if force || (auto_reloading && file_changed?)
-          @records = nil
-          undefine_attribute_methods
+          unload!
         end
 
         @records ||= begin

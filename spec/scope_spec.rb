@@ -101,7 +101,6 @@ describe 'querying' do
       country = Country.find_by_id(42)
       expect(country).to be_nil
     end
-
   end
 
   describe '.find_by' do
@@ -116,6 +115,11 @@ describe 'querying' do
       expect(country).to be_nil
     end
 
+    it 'load records' do
+      Country.unload!
+      country = Country.find_by(name: 'France')
+      expect(country.name).to be == 'France'
+    end
   end
 
   describe '.find_by!' do
