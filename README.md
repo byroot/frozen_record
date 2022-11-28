@@ -29,7 +29,7 @@ end
 ```
 
 But you also have to specify in which directory your data files are located.
-You can either do it globaly
+You can either do it globally
 
 ```ruby
 FrozenRecord::Base.base_path = '/path/to/some/directory'
@@ -141,7 +141,7 @@ Country.european.republics.part_of_nato.order(id: :desc)
 ## Indexing
 
 Querying is implemented as a simple linear search (`O(n)`). However if you are using Frozen Record with larger datasets, or are querying
-a collection repetedly, you can define indices for faster access.
+a collection repeatedly, you can define indices for faster access.
 
 ```ruby
 class Country < FrozenRecord::Base
