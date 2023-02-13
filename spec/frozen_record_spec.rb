@@ -80,6 +80,41 @@ RSpec.shared_examples 'main' do
 
   end
 
+  describe '.attribute' do
+
+    it 'deserializes the attribute' do
+      expect(country_model.find_by(name: 'Canada').continent).to be_a(TectonicString)
+    end
+
+    it 'sets the default value as default' do
+      expect(country_model.find_by(name: 'France').currency_code).to be == CurrencyCode.load("EUR")
+    end
+
+    it 'returns the first matching record' do
+      country = Country.find_by(currency_code: CurrencyCode.load('EUR'))
+      expect(country.name).to be == 'France'
+    end
+
+    it 'returns nil if record not found' do
+      country = Country.find_by(currency_code: CurrencyCode.load('THB'))
+      expect(country).to be_nil
+    end
+
+    it 'raises if no record found!' do
+      expect {
+        Country.find_by!(currency_code: CurrencyCode.load('THB'))
+      }.to raise_error(FrozenRecord::RecordNotFound)
+    end
+
+    it 'deserializes in the initializer' do
+      expect(country_model.new(currency_code: "CHF").currency_code).to be == CurrencyCode.load('CHF')
+    end
+    
+    it 'also sets the default in the initializer' do
+      expect(country_model.new.currency_code).to be == CurrencyCode.load('EUR')
+    end
+  end
+
   describe '.scope' do
 
     it 'defines a scope method' do
@@ -189,6 +224,7 @@ RSpec.shared_examples 'main' do
         'continent' => 'North America',
         'available' => true,
         'contemporary' => true,
+        'currency_code' => CurrencyCode.load('CAD'),
       }
     end
 

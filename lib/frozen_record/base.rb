@@ -30,8 +30,10 @@ module FrozenRecord
 
     class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
     class_attribute :index_definitions, instance_accessor: false
+    class_attribute :attribute_deserializers, instance_accessor: false
     class_attribute :max_records_scan, instance_accessor: false
     self.index_definitions = {}.freeze
+    self.attribute_deserializers = {}.freeze
 
     self.primary_key = 'id'
 
@@ -154,6 +156,10 @@ module FrozenRecord
         self.index_definitions = index_definitions.merge(index.attribute => index).freeze
       end
 
+      def attribute(attribute, klass)
+        self.attribute_deserializers = attribute_deserializers.merge(attribute.to_s => klass).freeze
+      end
+
       def memsize(object = self, seen = Set.new.compare_by_identity)
         return 0 unless seen.add?(object)
 
@@ -195,8 +201,8 @@ module FrozenRecord
 
         @records ||= begin
           records = backend.load(file_path)
-          if default_attributes
-            records = records.map { |r| assign_defaults!(r.dup).freeze }.freeze
+          if attribute_deserializers.any? || default_attributes
+            records = records.map { |r| assign_defaults!(deserialize_attributes!(r.dup)).freeze }.freeze
           end
           @attributes = list_attributes(records).freeze
           define_attribute_methods(@attributes.to_a)
@@ -214,7 +220,7 @@ module FrozenRecord
       private :load
 
       def new(attrs = {})
-        load(assign_defaults!(attrs.transform_keys(&:to_s)))
+        load(assign_defaults!(deserialize_attributes!(attrs.transform_keys(&:to_s))))
       end
 
       private
@@ -234,6 +240,18 @@ module FrozenRecord
           default_attributes.each do |key, value|
             unless record.key?(key)
               record[key] = value
+            end
+          end
+        end
+
+        record
+      end
+
+      def deserialize_attributes!(record)
+        if attribute_deserializers.any?
+          attribute_deserializers.each do |key, deserializer|
+            if record.key?(key)
+              record[key] = deserializer.load(record[key])
             end
           end
         end

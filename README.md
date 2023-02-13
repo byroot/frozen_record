@@ -154,6 +154,31 @@ Composite index keys are not supported.
 
 The primary key isn't indexed by default.
 
+## Serialized fields
+
+The `attribute` method can be used to provide a custom class to deserialize an attribute.  The class must implement a
+`load` class method that takes the raw attribute value and returns the deserialized value (similar to
+[ActiveRecord serialization](https://api.rubyonrails.org/v7.0.4/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html#method-i-serialize)).
+
+```ruby
+class ContinentString < String
+  class << self
+    alias_method :load, :new
+  end
+end
+
+Size = Struct.new(:length, :width, :depth) do
+  def self.load(value) # value is lxwxd eg: "23x12x5"
+    new(*value.split('x'))
+  end
+end
+
+class Country < FrozenRecord::Base
+  attribute :continent, ContinentString
+  attribute :size, Size
+end
+```
+
 ## Limitations
 
 Frozen Record is not meant to operate on large unindexed datasets.

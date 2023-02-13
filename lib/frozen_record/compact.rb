@@ -13,8 +13,8 @@ module FrozenRecord
 
         @records ||= begin
           records = backend.load(file_path)
-          if default_attributes
-            records = records.map { |r| assign_defaults!(r.dup).freeze }.freeze
+          if attribute_deserializers.any? || default_attributes
+            records = records.map { |r| assign_defaults!(deserialize_attributes!(r.dup)).freeze }.freeze
           end
           @attributes = list_attributes(records).freeze
           build_attributes_cache
