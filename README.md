@@ -100,7 +100,7 @@ class Country
   scope :european, -> { where(continent: 'Europe' ) }
 
   def self.republics
-    where(king: nil)
+    where(monarch: nil)
   end
 
   def self.part_of_nato

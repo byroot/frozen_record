@@ -109,7 +109,7 @@ RSpec.shared_examples 'main' do
     it 'deserializes in the initializer' do
       expect(country_model.new(currency_code: "CHF").currency_code).to be == CurrencyCode.load('CHF')
     end
-    
+
     it 'also sets the default in the initializer' do
       expect(country_model.new.currency_code).to be == CurrencyCode.load('EUR')
     end
@@ -219,7 +219,7 @@ RSpec.shared_examples 'main' do
         'population' => 33.88,
         'founded_on' => Date.parse('1867-07-01'),
         'updated_at' => Time.parse('2014-02-24T19:08:06-05:00'),
-        'king' => 'Elisabeth II',
+        'monarch' => 'Elisabeth II',
         'nato' => true,
         'continent' => 'North America',
         'available' => true,
@@ -232,9 +232,9 @@ RSpec.shared_examples 'main' do
 
   describe '`attribute`?' do
 
-    let(:blank) { country_model.new(id: 0, name: '', nato: false, king: nil) }
+    let(:blank) { country_model.new(id: 0, name: '', nato: false, monarch: nil) }
 
-    let(:present) { country_model.new(id: 42, name: 'Groland', nato: true, king: Object.new) }
+    let(:present) { country_model.new(id: 42, name: 'Groland', nato: true, monarch: Object.new) }
 
     it 'considers `0` as missing' do
       expect(blank.id?).to be false
@@ -249,7 +249,7 @@ RSpec.shared_examples 'main' do
     end
 
     it 'considers `nil` as missing' do
-      expect(blank.king?).to be false
+      expect(blank.monarch?).to be false
     end
 
     it 'considers other numbers than `0` as present' do
@@ -265,7 +265,7 @@ RSpec.shared_examples 'main' do
     end
 
     it 'considers not `nil` objects as present' do
-      expect(present.king?).to be true
+      expect(present.monarch?).to be true
     end
 
   end

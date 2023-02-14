@@ -463,8 +463,8 @@ describe 'querying' do
     it 'returns true when the same scope has be rechained' do
       scope_a = Country.nato.republics.nato.republics
       scope_b = Country.republics.nato
-      expect(scope_a.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['nato', true], ['king', nil], ['nato', true], ['king', nil]]
-      expect(scope_b.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['king', nil], ['nato', true]]
+      expect(scope_a.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['nato', true], ['monarch', nil], ['nato', true], ['monarch', nil]]
+      expect(scope_b.instance_variable_get(:@where_values).map { |k, v| [k, v.value] }).to be == [['monarch', nil], ['nato', true]]
       expect(scope_a).to be == scope_b
     end
   end
@@ -483,7 +483,7 @@ describe 'querying' do
     it 'raises on slow queries' do
       expect {
         FrozenRecord::Base.with_max_records_scan(1) do
-          Country.where(king: "Louis").to_a
+          Country.where(monarch: "Louis").to_a
         end
       }.to raise_error(FrozenRecord::SlowQuery)
     end
