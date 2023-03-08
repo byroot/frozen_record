@@ -154,10 +154,10 @@ Composite index keys are not supported.
 
 The primary key isn't indexed by default.
 
-## Serialized fields
+## Rich Types
 
-The `attribute` method can be used to provide a custom class to deserialize an attribute.  The class must implement a
-`load` class method that takes the raw attribute value and returns the deserialized value (similar to
+The `attribute` method can be used to provide a custom class to convert an attribute to a richer type.
+The class must implement a `load` class method that takes the raw attribute value and returns the deserialized value (similar to
 [ActiveRecord serialization](https://api.rubyonrails.org/v7.0.4/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html#method-i-serialize)).
 
 ```ruby

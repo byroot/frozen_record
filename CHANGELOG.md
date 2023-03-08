@@ -1,6 +1,13 @@
 # Unreleased
 
+# v0.27.0
+
+- Allow to define some richer attibute types, somewhat akin to Active Record `serialize` attributes. See the README for more information.
 - Fix `Model.find_by` fastpath raising an error when called before records are loaded.
+
+# v026.2
+
+- Properly load records when entiring the single attribute lookup fastpath.
 
 # v0.26.1
 
