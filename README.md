@@ -1,7 +1,7 @@
 # FrozenRecord
 
-[![Build Status](https://secure.travis-ci.org/byroot/frozen_record.svg)](http://travis-ci.org/byroot/frozen_record)
-[![Gem Version](https://badge.fury.io/rb/frozen_record.svg)](http://badge.fury.io/rb/frozen_record)
+[![Build Status](https://secure.travis-ci.org/byroot/frozen_record.svg)](https://travis-ci.org/byroot/frozen_record)
+[![Gem Version](https://badge.fury.io/rb/frozen_record.svg)](https://badge.fury.io/rb/frozen_record)
 
 Active Record-like interface for **read only** access to static data files of reasonable size.
 
@@ -74,7 +74,6 @@ end
 
 FrozenRecord aim to replicate only modern Active Record querying interface, and only the non "string typed" ones.
 
-e.g
 ```ruby
 # Supported query interfaces
 Country.
@@ -85,7 +84,7 @@ Country.
   offset(2).
   pluck(:name)
 
-# Non supported query interfaces
+# Non-supported query interfaces
 Country.
   where('region = "Europe" AND language != "English"').
   order('id DESC')
@@ -217,7 +216,7 @@ FrozenRecord::TestHelper.unload_fixtures
 Here's a Rails-specific example:
 
 ```ruby
-require "test_helper"
+require 'test_helper'
 require 'frozen_record/test_helper'
 
 class CountryTest < ActiveSupport::TestCase
@@ -230,7 +229,7 @@ class CountryTest < ActiveSupport::TestCase
     FrozenRecord::TestHelper.unload_fixtures
   end
 
-  test "countries have a valid name" do
+  test 'countries have a valid name' do
   # ...
 ```
 
