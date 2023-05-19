@@ -42,9 +42,27 @@ class Country < FrozenRecord::Base
 end
 ```
 
-You can also specify a custom backend. Backends are classes that know how to
-load records from a static file. By default FrozenRecord expects an YAML file,
-but this option can be changed per model:
+FrozenRecord has two built-in backends, for JSON and YAML.
+Backends are classes that know how to load records from a static file.
+
+The default backend is YAML and it expects a file that looks like this:
+
+```yaml
+- id: 'se'
+  name: 'Sweden'
+  region: 'Europe'
+  language: 'Swedish'
+  population: 10420000
+- id: 'de'
+  name: 'Germany'
+  region: 'Europe'
+  language: 'German'
+  population: 83200000
+
+# …
+```
+
+You can also specify a custom backend:
 
 ```ruby
 class Country < FrozenRecord::Base
@@ -79,6 +97,7 @@ FrozenRecord aim to replicate only modern Active Record querying interface, and 
 Country.
   where(region: 'Europe').
   where.not(language: 'English').
+  where(population: 10_000_000..).
   order(id: :desc).
   limit(10).
   offset(2).
