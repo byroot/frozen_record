@@ -17,7 +17,11 @@ module FrozenRecord
     attr_accessor :deprecated_yaml_erb_backend
 
     def eager_load!
-      Base.descendants.each(&:eager_load!)
+      p [:FrozenRecord_eager_load!]
+      Base.descendants.each do |model|
+        p [model.name, :eager_load!]
+        model.eager_load!
+      end
     end
   end
 
