@@ -183,7 +183,10 @@ module FrozenRecord
       end
 
       def eager_load!
-        return if auto_reloading || abstract_class?
+        if auto_reloading || abstract_class?
+          p [name, auto_reloading, abstract_class?]
+          return
+        end
 
         load_records
       end
@@ -208,6 +211,7 @@ module FrozenRecord
           define_attribute_methods(@attributes.to_a)
           records = FrozenRecord.ignore_max_records_scan { records.map { |r| load(r) }.freeze }
           index_definitions.values.each { |index| index.build(records) }
+          p [name, records.size]
           records
         end
       end
