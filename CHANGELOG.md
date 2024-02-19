@@ -1,5 +1,9 @@
 # Unreleased
 
+# v0.27.1
+
+- TestHelper.unload_fixture: handle models without data.
+
 # v0.27.0
 
 - Allow to define some richer attibute types, somewhat akin to Active Record `serialize` attributes. See the README for more information.
