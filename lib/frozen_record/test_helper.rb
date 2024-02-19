@@ -12,7 +12,7 @@ module FrozenRecord
 
         return if @cache.key?(model_class)
 
-        @cache[model_class] ||= model_class.base_path
+        @cache[model_class] = base_path_if_file_present(model_class)
 
         model_class.base_path = alternate_base_path
         model_class.load_records(force: true)
@@ -26,9 +26,10 @@ module FrozenRecord
         return unless @cache.key?(model_class)
 
         old_base_path = @cache[model_class]
-        model_class.base_path = old_base_path
-        model_class.load_records(force: true)
-
+        if old_base_path
+          model_class.base_path = old_base_path
+          model_class.load_records(force: true)
+        end
         @cache.delete(model_class)
       end
 
@@ -39,6 +40,19 @@ module FrozenRecord
       end
 
       private
+
+      # Checks for the existence of the file for the frozen_record in the default directory.
+      # Returns the base_path if the file is present, otherwise nil.
+      # Some tests define specific test classes that do ONLY exist in the alternate directory.
+      # As `unload_fixture(s)` tries to force load the default file, it would raise an error for
+      # the "test only" fixtures. The nil value in the cache handles that case gracefully.
+      def base_path_if_file_present(model_class)
+        if File.exists?(model_class.file_path)
+          model_class.base_path
+        else
+          nil
+        end
+      end
 
       def ensure_model_class_is_frozenrecord(model_class)
         unless model_class < FrozenRecord::Base

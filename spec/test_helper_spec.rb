@@ -49,6 +49,18 @@ describe 'test fixture loading' do
       expect(Continent.count).to be == 1
       expect(Country.count).to be == 3
     end
+
+    context "when the test fixture does not exist in normal base path" do
+      class OnlyInTest < FrozenRecord::Base; end
+      before do
+        test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper')
+        FrozenRecord::TestHelper.load_fixture(OnlyInTest, test_fixtures_base_path)
+      end
+      it 'unload fixture gracefully recovers from an ' do
+
+        expect { FrozenRecord::TestHelper.unload_fixture(OnlyInTest) }.not_to raise_error
+      end
+    end
   end
 
   describe '.unload_fixtures' do
