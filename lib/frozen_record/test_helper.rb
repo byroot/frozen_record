@@ -47,7 +47,7 @@ module FrozenRecord
       # As `unload_fixture(s)` tries to force load the default file, it would raise an error for
       # the "test only" fixtures. The nil value in the cache handles that case gracefully.
       def base_path_if_file_present(model_class)
-        if File.exists?(model_class.file_path)
+        if File.exist?(model_class.file_path)
           model_class.base_path
         else
           nil
