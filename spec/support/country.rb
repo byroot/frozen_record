@@ -22,7 +22,7 @@ class Country < FrozenRecord::Base
   attribute :continent, TectonicString
 
   def self.republics
-    where(king: nil)
+    where(monarch: nil)
   end
 
   def self.nato
