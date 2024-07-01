@@ -1,5 +1,9 @@
 # Unreleased
 
+# v0.27.2
+
+- Fix a Ruby warning that was emitted when `frozen_record` is loaded.
+
 # v0.27.1
 
 - TestHelper.unload_fixture: handle models without data.
