@@ -39,7 +39,7 @@ module FrozenRecord
 
     self.backend = FrozenRecord::Backends::Yaml
 
-    attribute_method_suffix -'?'
+    attribute_method_suffix '?'
 
     class ThreadSafeStorage
 
