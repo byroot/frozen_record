@@ -1,5 +1,7 @@
 # Unreleased
 
+# v0.27.3
+
 - Fix compatibility with Rails 8.0.0alpha: https://github.com/rails/rails/pull/52717
 
 # v0.27.2
