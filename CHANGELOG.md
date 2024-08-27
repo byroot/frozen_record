@@ -1,5 +1,7 @@
 # Unreleased
 
+- Fix compatibility with Rails 8.0.0alpha: https://github.com/rails/rails/pull/52717
+
 # v0.27.2
 
 - Fix a Ruby warning that was emitted when `frozen_record` is loaded.

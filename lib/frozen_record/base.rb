@@ -80,13 +80,6 @@ module FrozenRecord
         set_primary_key(-primary_key.to_s)
       end
 
-      alias_method :set_base_path, :base_path=
-      private :set_base_path
-      def base_path=(base_path)
-       @file_path = nil
-       set_base_path(base_path)
-      end
-
       attr_accessor :abstract_class
 
       def attributes
@@ -115,13 +108,11 @@ module FrozenRecord
 
       def file_path
         raise ArgumentError, "You must define `#{name}.base_path`" unless base_path
-        @file_path ||= begin
-          file_path = File.join(base_path, backend.filename(name))
-          if !File.exist?(file_path) && File.exist?("#{file_path}.erb")
-            "#{file_path}.erb"
-          else
-            file_path
-          end
+        file_path = File.join(base_path, backend.filename(name))
+        if !File.exist?(file_path) && File.exist?("#{file_path}.erb")
+          "#{file_path}.erb"
+        else
+          file_path
         end
       end
 
