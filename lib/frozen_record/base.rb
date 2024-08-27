@@ -28,16 +28,12 @@ module FrozenRecord
     FIND_BY_PATTERN = /\Afind_by_(\w+)(!?)/
     FALSY_VALUES = [false, nil, 0, -''].to_set
 
-    class_attribute :base_path, :primary_key, :backend, :auto_reloading, :default_attributes, instance_accessor: false
+    class_attribute :base_path, :_primary_key, :backend, :auto_reloading, :_default_attributes, instance_accessor: false
     class_attribute :index_definitions, instance_accessor: false
     class_attribute :attribute_deserializers, instance_accessor: false
     class_attribute :max_records_scan, instance_accessor: false
     self.index_definitions = {}.freeze
     self.attribute_deserializers = {}.freeze
-
-    self.primary_key = 'id'
-
-    self.backend = FrozenRecord::Backends::Yaml
 
     attribute_method_suffix '?'
 
@@ -68,16 +64,20 @@ module FrozenRecord
         self.max_records_scan = previous_max_records_scan
       end
 
-      alias_method :set_default_attributes, :default_attributes=
-      private :set_default_attributes
-      def default_attributes=(default_attributes)
-        set_default_attributes(default_attributes.transform_keys(&:to_s))
+      def default_attributes
+        _default_attributes
       end
 
-      alias_method :set_primary_key, :primary_key=
-      private :set_primary_key
+      def default_attributes=(default_attributes)
+        self._default_attributes = default_attributes.transform_keys(&:to_s)
+      end
+
+      def primary_key
+        _primary_key
+      end
+
       def primary_key=(primary_key)
-        set_primary_key(-primary_key.to_s)
+        self._primary_key = -primary_key.to_s
       end
 
       attr_accessor :abstract_class
@@ -273,6 +273,10 @@ module FrozenRecord
       end
 
     end
+
+    self.primary_key = 'id'
+
+    self.backend = FrozenRecord::Backends::Yaml
 
     def initialize(attrs = {})
       @attributes = attrs.freeze
