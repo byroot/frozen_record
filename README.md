@@ -217,6 +217,8 @@ FrozenRecord::Base.auto_reloading = true # Activate reloading for all models
 Country.auto_reloading # Activate reloading for `Country` only
 ```
 
+If you need manual reloading, you can call `load_records(force: true)` manually on your class.
+
 ## Testing
 
 Testing your FrozenRecord-backed models with test fixtures is made easier with:
