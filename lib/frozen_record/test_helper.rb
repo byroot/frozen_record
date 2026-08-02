@@ -2,6 +2,7 @@
 
 module FrozenRecord
   module TestHelper
+    FixtureAttributeMismatch = Class.new(StandardError)
     NoFixturesLoaded = Class.new(StandardError)
 
     class << self
@@ -15,10 +16,16 @@ module FrozenRecord
           unload_fixture(model_class)
         end
 
-        @cache[model_class] = base_path_if_file_present(model_class)
+        old_base_path = base_path_if_file_present(model_class)
+        expected_attributes = model_class.attributes if old_base_path
+        @cache[model_class] = old_base_path
 
         model_class.base_path = alternate_base_path
         model_class.load_records(force: true)
+        ensure_fixture_attributes_match(model_class, expected_attributes) if expected_attributes
+      rescue FixtureAttributeMismatch
+        unload_fixture(model_class)
+        raise
       end
 
       def unload_fixture(model_class)
@@ -61,6 +68,19 @@ module FrozenRecord
         unless model_class < FrozenRecord::Base
           raise ArgumentError, "Model class (#{model_class}) does not inherit from #{FrozenRecord::Base}"
         end
+      end
+
+      def ensure_fixture_attributes_match(model_class, expected_attributes)
+        actual_attributes = model_class.attributes
+        missing_attributes = expected_attributes - actual_attributes
+        unexpected_attributes = actual_attributes - expected_attributes
+        return if missing_attributes.empty? && unexpected_attributes.empty?
+
+        differences = []
+        differences << "missing: #{missing_attributes.to_a.sort.join(', ')}" unless missing_attributes.empty?
+        differences << "unexpected: #{unexpected_attributes.to_a.sort.join(', ')}" unless unexpected_attributes.empty?
+
+        raise FixtureAttributeMismatch, "#{model_class} fixture attributes do not match (#{differences.join('; ')})"
       end
     end
   end

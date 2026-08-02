@@ -24,6 +24,36 @@ describe 'test fixture loading' do
       }.to raise_error(ArgumentError)
     end
 
+    it 'raises when alternate fixtures are missing attributes' do
+      original_base_path = Country.base_path
+      test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper', 'missing_attributes')
+
+      expect {
+        FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
+      }.to raise_error(
+        FrozenRecord::TestHelper::FixtureAttributeMismatch,
+        'Country fixture attributes do not match (missing: nato)'
+      )
+
+      expect(Country.base_path).to eq(original_base_path)
+      expect(Country.count).to be == 3
+    end
+
+    it 'raises when alternate fixtures have unexpected attributes' do
+      original_base_path = Country.base_path
+      test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper', 'unexpected_attributes')
+
+      expect {
+        FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
+      }.to raise_error(
+        FrozenRecord::TestHelper::FixtureAttributeMismatch,
+        'Country fixture attributes do not match (unexpected: region_code)'
+      )
+
+      expect(Country.base_path).to eq(original_base_path)
+      expect(Country.count).to be == 3
+    end
+
     it 'is a no-op when called again with the same path' do
       test_fixtures_base_path = File.join(File.dirname(__FILE__), 'fixtures', 'test_helper')
       FrozenRecord::TestHelper.load_fixture(Country, test_fixtures_base_path)
