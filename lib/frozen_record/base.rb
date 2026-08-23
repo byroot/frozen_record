@@ -103,7 +103,7 @@ module FrozenRecord
       end
 
       delegate :each, :find_each, :where, :first, :first!, :last, :last!,
-               :pluck, :ids, :order, :limit, :offset, :minimum, :maximum, :average, :sum, :count,
+               :pluck, :pick, :ids, :order, :limit, :offset, :minimum, :maximum, :average, :sum, :count,
                to: :current_scope
 
       def file_path

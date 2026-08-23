@@ -148,6 +148,7 @@ Country.european.republics.part_of_nato.order(id: :desc)
 ### Supported calculation methods
 
   - count
+  - pick
   - pluck
   - ids
   - minimum

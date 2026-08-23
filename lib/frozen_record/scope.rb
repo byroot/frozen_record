@@ -78,6 +78,10 @@ module FrozenRecord
       end
     end
 
+    def pick(*attributes)
+      limit(1).pluck(*attributes).first
+    end
+
     def ids
       pluck(primary_key)
     end

@@ -352,6 +352,84 @@ describe 'querying' do
 
   end
 
+  describe '.pick' do
+
+    context 'when called with a single argument' do
+
+      it 'returns the value of the first record' do
+        name = Country.pick(:name)
+        expect(name).to be == 'Canada'
+      end
+
+    end
+
+    context 'when called with multiple arguments' do
+
+      it 'returns an array of the values of the first record' do
+        attributes = Country.pick(:id, :name)
+        expect(attributes).to be == [1, 'Canada']
+      end
+
+    end
+
+    context 'when called without arguments' do
+
+      it 'raises a NotImplementedError' do
+        expect { Country.pick }.to raise_error(NotImplementedError)
+      end
+
+    end
+
+    context 'when called on a scope' do
+
+      it 'returns the attribute of the first matching record' do
+        name = Country.where(continent: 'Europe').pick(:name)
+        expect(name).to be == 'France'
+      end
+
+      it 'honors the ordering' do
+        name = Country.order(name: :desc).pick(:name)
+        expect(name).to be == 'France'
+      end
+
+      it 'honors the offset' do
+        name = Country.offset(1).pick(:name)
+        expect(name).to be == 'France'
+      end
+
+      it 'does not alter the receiver scope' do
+        scope = Country.where(nato: true)
+        scope.pick(:name)
+        expect(scope.length).to be == 2
+      end
+
+    end
+
+    context 'when no record matches' do
+
+      it 'returns nil when called with a single argument' do
+        name = Country.where(name: 'not existing').pick(:name)
+        expect(name).to be_nil
+      end
+
+      it 'returns nil when called with multiple arguments' do
+        attributes = Country.where(name: 'not existing').pick(:id, :name)
+        expect(attributes).to be_nil
+      end
+
+    end
+
+    context 'when passed an argument that is not an attribute' do
+
+      it 'returns the result of calling the given method name' do
+        reverse_name = Country.pick(:reverse_name)
+        expect(reverse_name).to be == 'adanaC'
+      end
+
+    end
+
+  end
+
   describe '.ids' do
 
     context 'when called with no arguments' do
